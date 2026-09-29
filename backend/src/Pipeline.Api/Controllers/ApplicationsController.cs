@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pipeline.Application.Features.Applications.DTOs;
 using Pipeline.Application.Features.Applications.Services;
+using Pipeline.Application.Features.Contacts.DTOs;
+using Pipeline.Application.Features.Contacts.Services;
 
 namespace Pipeline.Api.Controllers;
 
@@ -14,10 +16,12 @@ namespace Pipeline.Api.Controllers;
 public class ApplicationsController : ControllerBase
 {
     private readonly IApplicationService _applicationService;
+    private readonly IContactService _contactService;
 
-    public ApplicationsController(IApplicationService applicationService)
+    public ApplicationsController(IApplicationService applicationService, IContactService contactService)
     {
         _applicationService = applicationService;
+        _contactService = contactService;
     }
 
     [HttpGet]
@@ -74,5 +78,26 @@ public class ApplicationsController : ControllerBase
     {
         var duplicate = await _applicationService.DuplicateApplicationAsync(id, ct);
         return Ok(duplicate);
+    }
+
+    [HttpGet("{id:guid}/contacts")]
+    public async Task<IActionResult> GetContacts(Guid id, CancellationToken ct)
+    {
+        var contacts = await _contactService.GetContactsForApplicationAsync(id, ct);
+        return Ok(contacts);
+    }
+
+    [HttpPost("{id:guid}/contacts")]
+    public async Task<IActionResult> LinkContact(Guid id, [FromBody] LinkApplicationContactRequest request, CancellationToken ct)
+    {
+        await _contactService.LinkApplicationContactAsync(request.ApplicationId == id ? id : request.ApplicationId, request, ct);
+        return NoContent();
+    }
+
+    [HttpDelete("{id:guid}/contacts/{contactId:guid}")]
+    public async Task<IActionResult> UnlinkContact(Guid id, Guid contactId, CancellationToken ct)
+    {
+        await _contactService.UnlinkApplicationContactAsync(contactId, id, ct);
+        return NoContent();
     }
 }
