@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: pipeline-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-pipeline}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      POSTGRES_DB: ${POSTGRES_DB:-pipeline}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pipeline} -d ${POSTGRES_DB:-pipeline}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: pipeline-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${Storage__AccessKey:-minio}
+      MINIO_ROOT_PASSWORD: ${Storage__SecretKey:-minioadmin}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set local http://minio:9000 ${Storage__AccessKey:-minio} ${Storage__SecretKey:-minioadmin};
+      /usr/bin/mc mb local/${Storage__Bucket:-pipeline} || true;
+      exit 0;
+      "
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: pipeline-mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: src/Pipeline.Api/Dockerfile.dev
+    container_name: pipeline-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: Host=db;Port=5432;Database=${POSTGRES_DB:-pipeline};Username=${POSTGRES_USER:-pipeline};Password=${POSTGRES_PASSWORD:-change-me}
+      Jwt__Secret: ${Jwt__Secret:-very-secure-jwt-secret-key-that-is-at-least-32-chars-long!}
+      Jwt__Issuer: ${Jwt__Issuer:-pipeline}
+      Jwt__Audience: ${Jwt__Audience:-pipeline-web}
+      Frontend__Origin: ${Frontend__Origin:-http://localhost:5173}
+      Storage__Provider: S3
+      Storage__Endpoint: http://minio:9000
+      Storage__Bucket: ${Storage__Bucket:-pipeline}
+      Storage__AccessKey: ${Storage__AccessKey:-minio}
+      Storage__SecretKey: ${Storage__SecretKey:-minioadmin}
+      Smtp__Host: mailpit
+      Smtp__Port: 1025
+      Smtp__From: ${Smtp__From:-no-reply@pipeline.local}
+      AUTO_MIGRATE: ${AUTO_MIGRATE:-true}
+    ports:
+      - "5000:8080"
+    volumes:
+      - ./backend:/app:cached
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: pipeline-web
+    depends_on:
+      - api
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:5000
+    volumes:
+      - ./frontend:/app:cached
+      - /app/node_modules
+
+volumes:
+  postgres_data:
+  minio_data:

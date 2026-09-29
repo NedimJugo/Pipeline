@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: pipeline-prod-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-pipeline}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-pipeline}
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pipeline} -d ${POSTGRES_DB:-pipeline}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: src/Pipeline.Api/Dockerfile
+    container_name: pipeline-prod-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Default: Host=db;Port=5432;Database=${POSTGRES_DB:-pipeline};Username=${POSTGRES_USER:-pipeline};Password=${POSTGRES_PASSWORD}
+      Jwt__Secret: ${Jwt__Secret}
+      Jwt__Issuer: ${Jwt__Issuer:-pipeline}
+      Jwt__Audience: ${Jwt__Audience:-pipeline-web}
+      Frontend__Origin: https://${DOMAIN:-localhost}
+      Storage__Provider: ${Storage__Provider:-S3}
+      Storage__Endpoint: ${Storage__Endpoint}
+      Storage__Bucket: ${Storage__Bucket}
+      Storage__AccessKey: ${Storage__AccessKey}
+      Storage__SecretKey: ${Storage__SecretKey}
+      Smtp__Host: ${Smtp__Host}
+      Smtp__Port: ${Smtp__Port:-587}
+      Smtp__User: ${Smtp__User}
+      Smtp__Password: ${Smtp__Password}
+      Smtp__From: ${Smtp__From}
+      AUTO_MIGRATE: ${AUTO_MIGRATE:-true}
+    expose:
+      - "8080"
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pipeline-prod-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    expose:
+      - "80"
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: pipeline-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+      - api
+
+volumes:
+  postgres_prod_data:
+  caddy_data:
+  caddy_config:
