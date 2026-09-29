@@ -40,7 +40,14 @@ var defaultConnection = builder.Configuration.GetConnectionString("Default")
 
 builder.Services.AddDbContext<PipelineDbContext>((sp, options) =>
 {
-    options.UseNpgsql(defaultConnection);
+    if (defaultConnection.StartsWith("Data Source=", StringComparison.OrdinalIgnoreCase) || defaultConnection.EndsWith(".db", StringComparison.OrdinalIgnoreCase))
+    {
+        options.UseSqlite(defaultConnection);
+    }
+    else
+    {
+        options.UseNpgsql(defaultConnection);
+    }
 });
 
 // Identity configuration
@@ -149,7 +156,14 @@ if (autoMigrate)
     {
         try
         {
-            db.Database.Migrate();
+            if (db.Database.IsSqlite())
+            {
+                db.Database.EnsureCreated();
+            }
+            else
+            {
+                db.Database.Migrate();
+            }
         }
         catch (Exception ex)
         {
