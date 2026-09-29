@@ -121,6 +121,14 @@ public enum ContactType
     Other
 }
 
+public enum ContactWarmth
+{
+    Hot,
+    Warm,
+    Cooling,
+    Cold
+}
+
 public enum TaskSource
 {
     Manual,
