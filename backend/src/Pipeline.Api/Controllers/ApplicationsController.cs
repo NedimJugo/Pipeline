@@ -7,6 +7,8 @@ using Pipeline.Application.Features.Applications.DTOs;
 using Pipeline.Application.Features.Applications.Services;
 using Pipeline.Application.Features.Contacts.DTOs;
 using Pipeline.Application.Features.Contacts.Services;
+using Pipeline.Application.Features.Interviews.DTOs;
+using Pipeline.Application.Features.Interviews.Services;
 
 namespace Pipeline.Api.Controllers;
 
@@ -17,11 +19,16 @@ public class ApplicationsController : ControllerBase
 {
     private readonly IApplicationService _applicationService;
     private readonly IContactService _contactService;
+    private readonly IInterviewService _interviewService;
 
-    public ApplicationsController(IApplicationService applicationService, IContactService contactService)
+    public ApplicationsController(
+        IApplicationService applicationService,
+        IContactService contactService,
+        IInterviewService interviewService)
     {
         _applicationService = applicationService;
         _contactService = contactService;
+        _interviewService = interviewService;
     }
 
     [HttpGet]
@@ -99,5 +106,19 @@ public class ApplicationsController : ControllerBase
     {
         await _contactService.UnlinkApplicationContactAsync(contactId, id, ct);
         return NoContent();
+    }
+
+    [HttpGet("{id:guid}/interviews")]
+    public async Task<IActionResult> GetInterviews(Guid id, CancellationToken ct)
+    {
+        var interviews = await _interviewService.GetInterviewsForApplicationAsync(id, ct);
+        return Ok(interviews);
+    }
+
+    [HttpPost("{id:guid}/interviews")]
+    public async Task<IActionResult> CreateInterview(Guid id, [FromBody] CreateInterviewRequest request, CancellationToken ct)
+    {
+        var created = await _interviewService.CreateInterviewAsync(request with { ApplicationId = id }, ct);
+        return Ok(created);
     }
 }

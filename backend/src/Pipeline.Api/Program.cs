@@ -17,6 +17,7 @@ using Pipeline.Application.Features.Auth.Services;
 using Pipeline.Application.Features.Companies.Services;
 using Pipeline.Application.Features.Contacts.Services;
 using Pipeline.Application.Features.Interactions.Services;
+using Pipeline.Application.Features.Interviews.Services;
 using Pipeline.Domain.Entities;
 using Pipeline.Infrastructure.Persistence;
 using Pipeline.Infrastructure.Services;
@@ -104,6 +105,7 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IInteractionService, InteractionService>();
+builder.Services.AddScoped<IInterviewService, InterviewService>();
 
 // CORS Configuration
 var frontendOrigin = builder.Configuration["Frontend:Origin"] 
