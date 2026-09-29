@@ -98,6 +98,30 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+// Storage Configuration
+var storageProvider = builder.Configuration["Storage:Provider"] ?? builder.Configuration["Storage__Provider"] ?? "Local";
+var storageEndpoint = builder.Configuration["Storage:Endpoint"] ?? builder.Configuration["Storage__Endpoint"];
+var storageBucket = builder.Configuration["Storage:Bucket"] ?? builder.Configuration["Storage__Bucket"] ?? "pipeline";
+var storageAccessKey = builder.Configuration["Storage:AccessKey"] ?? builder.Configuration["Storage__AccessKey"] ?? "minio";
+var storageSecretKey = builder.Configuration["Storage:SecretKey"] ?? builder.Configuration["Storage__SecretKey"] ?? "minioadmin";
+
+if (string.Equals(storageProvider, "S3", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(storageEndpoint))
+{
+    var s3Config = new Amazon.S3.AmazonS3Config
+    {
+        ServiceURL = storageEndpoint,
+        ForcePathStyle = true,
+        UseHttp = storageEndpoint.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+    };
+    var credentials = new Amazon.Runtime.BasicAWSCredentials(storageAccessKey, storageSecretKey);
+    builder.Services.AddSingleton<Amazon.S3.IAmazonS3>(new Amazon.S3.AmazonS3Client(credentials, s3Config));
+    builder.Services.AddSingleton<IFileStorage>(sp => new Pipeline.Infrastructure.Services.Storage.S3FileStorage(sp.GetRequiredService<Amazon.S3.IAmazonS3>(), storageBucket));
+}
+else
+{
+    builder.Services.AddSingleton<IFileStorage>(new Pipeline.Infrastructure.Services.Storage.LocalFileStorage());
+}
+
 // Application Services
 builder.Services.AddSingleton<JwtTokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -106,6 +130,7 @@ builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IInteractionService, InteractionService>();
 builder.Services.AddScoped<IInterviewService, InterviewService>();
+builder.Services.AddScoped<Pipeline.Application.Features.Documents.Services.IDocumentService, DocumentService>();
 
 // CORS Configuration
 var frontendOrigin = builder.Configuration["Frontend:Origin"] 

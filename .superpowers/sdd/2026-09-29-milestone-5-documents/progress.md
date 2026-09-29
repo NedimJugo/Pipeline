@@ -9,10 +9,10 @@
 - Task 6 -> Task 7: Full milestone verification.
 Pre-flight: clean interface graph.
 
-Task 1: pending
-Task 2: pending
-Task 3: pending
-Task 4: pending
-Task 5: pending
-Task 6: pending
-Task 7: pending
+Task 1: complete
+Task 2: complete
+Task 3: complete
+Task 4: complete
+Task 5: complete
+Task 6: complete
+Task 7: complete

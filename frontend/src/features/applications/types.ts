@@ -119,6 +119,8 @@ export interface CreateApplicationPayload {
   priority?: number;
   favorite?: boolean;
   excitementRating?: number;
+  documentVersionCvId?: string | null;
+  documentVersionCoverId?: string | null;
 }
 
 export interface UpdateStatusPayload {

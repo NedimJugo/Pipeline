@@ -89,7 +89,9 @@ public record CreateApplicationRequest(
     string? Cons = null,
     int Priority = 2,
     bool Favorite = false,
-    int ExcitementRating = 3);
+    int ExcitementRating = 3,
+    Guid? DocumentVersionCvId = null,
+    Guid? DocumentVersionCoverId = null);
 
 public record UpdateApplicationRequest(
     string RoleTitle,
@@ -117,7 +119,9 @@ public record UpdateApplicationRequest(
     DateTime? OfferDeadline = null,
     string? ClosedReason = null,
     string? RejectionStage = null,
-    string? LessonsLearned = null);
+    string? LessonsLearned = null,
+    Guid? DocumentVersionCvId = null,
+    Guid? DocumentVersionCoverId = null);
 
 public record UpdateStatusRequest(
     ApplicationStatus Status,

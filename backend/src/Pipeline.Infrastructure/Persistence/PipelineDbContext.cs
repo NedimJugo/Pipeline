@@ -92,6 +92,15 @@ public class PipelineDbContext : IdentityDbContext<User, IdentityRole<Guid>, Gui
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        // Document relations
+        builder.Entity<Document>(b =>
+        {
+            b.HasMany(d => d.Versions)
+                .WithOne(v => v.Document)
+                .HasForeignKey(v => v.DocumentId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
         // Configure global query filters for IUserOwnedEntity and ISoftDeletable
         foreach (var entityType in builder.Model.GetEntityTypes())
         {

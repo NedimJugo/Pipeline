@@ -11,8 +11,8 @@ import { ContactsPage } from '@/features/contacts/ContactsPage';
 import { ContactDetailPage } from '@/features/contacts/ContactDetailPage';
 import { InterviewsPage } from '@/features/interviews/InterviewsPage';
 import { InterviewDetailPage } from '@/features/interviews/InterviewDetailPage';
+import { DocumentsPage } from '@/features/documents/DocumentsPage';
 import {
-  DocumentsPage,
   TasksPage,
   ReferencesPage,
   OffersPage,

@@ -173,6 +173,8 @@ public class ApplicationService : IApplicationService
             Priority = request.Priority,
             Favorite = request.Favorite,
             ExcitementRating = request.ExcitementRating,
+            DocumentVersionCvId = request.DocumentVersionCvId,
+            DocumentVersionCoverId = request.DocumentVersionCoverId,
             CreatedAt = now,
             UpdatedAt = now
         };
@@ -243,6 +245,8 @@ public class ApplicationService : IApplicationService
         if (request.ClosedReason != null) app.ClosedReason = request.ClosedReason;
         if (request.RejectionStage != null) app.RejectionStage = request.RejectionStage;
         if (request.LessonsLearned != null) app.LessonsLearned = request.LessonsLearned;
+        if (request.DocumentVersionCvId.HasValue) app.DocumentVersionCvId = request.DocumentVersionCvId.Value == Guid.Empty ? null : request.DocumentVersionCvId.Value;
+        if (request.DocumentVersionCoverId.HasValue) app.DocumentVersionCoverId = request.DocumentVersionCoverId.Value == Guid.Empty ? null : request.DocumentVersionCoverId.Value;
 
         app.UpdatedAt = DateTime.UtcNow;
 
