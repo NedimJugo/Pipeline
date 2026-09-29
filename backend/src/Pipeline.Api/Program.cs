@@ -12,7 +12,9 @@ using Microsoft.OpenApi.Models;
 using Pipeline.Api.Middleware;
 using Pipeline.Api.Services;
 using Pipeline.Application.Common.Interfaces;
+using Pipeline.Application.Features.Applications.Services;
 using Pipeline.Application.Features.Auth.Services;
+using Pipeline.Application.Features.Companies.Services;
 using Pipeline.Domain.Entities;
 using Pipeline.Infrastructure.Persistence;
 using Pipeline.Infrastructure.Services;
@@ -96,6 +98,8 @@ builder.Services.AddAuthorization();
 // Application Services
 builder.Services.AddSingleton<JwtTokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
 
 // CORS Configuration
 var frontendOrigin = builder.Configuration["Frontend:Origin"] 

@@ -1,0 +1,143 @@
+using System;
+using System.Collections.Generic;
+using Pipeline.Domain.Enums;
+
+namespace Pipeline.Application.Features.Applications.DTOs;
+
+public record ApplicationListItemDto(
+    Guid Id,
+    Guid CompanyId,
+    string CompanyName,
+    string RoleTitle,
+    string? JobUrl,
+    ApplicationSource Source,
+    string? SourceDetail,
+    ApplicationStatus Status,
+    DateTime StatusChangedAt,
+    DateTime? AppliedAt,
+    WorkMode WorkMode,
+    EmploymentType EmploymentType,
+    string? Location,
+    decimal? SalaryMin,
+    decimal? SalaryMax,
+    string Currency,
+    int Priority,
+    bool Favorite,
+    int ExcitementRating,
+    int DaysInStage,
+    DateTime? NextInterviewDate,
+    string? ClosedReason,
+    string? RejectionStage);
+
+public record ApplicationDetailDto(
+    Guid Id,
+    Guid CompanyId,
+    string CompanyName,
+    string? CompanyWebsite,
+    string RoleTitle,
+    string? JobUrl,
+    ApplicationSource Source,
+    string? SourceDetail,
+    ApplicationStatus Status,
+    DateTime StatusChangedAt,
+    DateTime? AppliedAt,
+    WorkMode WorkMode,
+    EmploymentType EmploymentType,
+    string? Location,
+    decimal? SalaryMin,
+    decimal? SalaryMax,
+    string Currency,
+    string? JobDescription,
+    string? Notes,
+    string? Pros,
+    string? Cons,
+    int Priority,
+    bool Favorite,
+    int ExcitementRating,
+    int DaysInStage,
+    Guid? DocumentVersionCvId,
+    string? DocumentVersionCvLabel,
+    Guid? DocumentVersionCoverId,
+    string? DocumentVersionCoverLabel,
+    string? ClosedReason,
+    string? RejectionStage,
+    string? LessonsLearned,
+    decimal? OfferSalary,
+    string? OfferBenefits,
+    DateTime? OfferDeadline,
+    DateTime CreatedAt,
+    DateTime UpdatedAt);
+
+public record CreateApplicationRequest(
+    string RoleTitle,
+    Guid? CompanyId = null,
+    string? CompanyName = null,
+    string? JobUrl = null,
+    ApplicationSource Source = ApplicationSource.LinkedIn,
+    string? SourceDetail = null,
+    ApplicationStatus Status = ApplicationStatus.Wishlist,
+    DateTime? AppliedAt = null,
+    WorkMode WorkMode = WorkMode.Remote,
+    EmploymentType EmploymentType = EmploymentType.FullTime,
+    string? Location = null,
+    decimal? SalaryMin = null,
+    decimal? SalaryMax = null,
+    string Currency = "USD",
+    string? JobDescription = null,
+    string? Notes = null,
+    string? Pros = null,
+    string? Cons = null,
+    int Priority = 2,
+    bool Favorite = false,
+    int ExcitementRating = 3);
+
+public record UpdateApplicationRequest(
+    string RoleTitle,
+    Guid? CompanyId = null,
+    string? CompanyName = null,
+    string? JobUrl = null,
+    ApplicationSource Source = ApplicationSource.LinkedIn,
+    string? SourceDetail = null,
+    DateTime? AppliedAt = null,
+    WorkMode WorkMode = WorkMode.Remote,
+    EmploymentType EmploymentType = EmploymentType.FullTime,
+    string? Location = null,
+    decimal? SalaryMin = null,
+    decimal? SalaryMax = null,
+    string Currency = "USD",
+    string? JobDescription = null,
+    string? Notes = null,
+    string? Pros = null,
+    string? Cons = null,
+    int Priority = 2,
+    bool Favorite = false,
+    int ExcitementRating = 3,
+    decimal? OfferSalary = null,
+    string? OfferBenefits = null,
+    DateTime? OfferDeadline = null,
+    string? ClosedReason = null,
+    string? RejectionStage = null,
+    string? LessonsLearned = null);
+
+public record UpdateStatusRequest(
+    ApplicationStatus Status,
+    string? Note = null,
+    string? ClosedReason = null,
+    string? RejectionStage = null,
+    string? LessonsLearned = null);
+
+public record ApplicationTimelineItemDto(
+    Guid Id,
+    string Type, // "StatusChange", "Interaction", "Interview", "Task"
+    string Title,
+    string? Description,
+    DateTime Timestamp,
+    Dictionary<string, string?>? Metadata = null);
+
+public record ApplicationFilterDto(
+    ApplicationStatus? Status = null,
+    string? Search = null,
+    ApplicationSource? Source = null,
+    WorkMode? WorkMode = null,
+    int? Priority = null,
+    bool? Favorite = null);
