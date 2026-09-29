@@ -32,6 +32,18 @@ export const useCreateApplication = () => {
   });
 };
 
+export const useUpdateApplication = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: Partial<CreateApplicationPayload> }) =>
+      applicationsApi.update(id, payload),
+    onSuccess: (_data, { id }) => {
+      queryClient.invalidateQueries({ queryKey: ['applications'] });
+      queryClient.invalidateQueries({ queryKey: ['application', id] });
+    },
+  });
+};
+
 export const useUpdateApplicationStatus = () => {
   const queryClient = useQueryClient();
 

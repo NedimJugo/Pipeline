@@ -66,7 +66,9 @@ public class ApplicationService : IApplicationService
             {
                 var search = filter.Search.Trim().ToLower();
                 query = query.Where(a => a.RoleTitle.ToLower().Contains(search) 
-                    || (a.Company != null && a.Company.Name.ToLower().Contains(search)));
+                    || (a.Company != null && a.Company.Name.ToLower().Contains(search))
+                    || (a.JobDescription != null && a.JobDescription.ToLower().Contains(search))
+                    || (a.Notes != null && a.Notes.ToLower().Contains(search)));
             }
         }
 

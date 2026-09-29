@@ -6,6 +6,7 @@ import { LoginPage } from '@/features/auth/LoginPage';
 import { RegisterPage } from '@/features/auth/RegisterPage';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
 import { ApplicationsPage } from '@/features/applications/ApplicationsPage';
+import { ApplicationDetailPage } from '@/features/applications/ApplicationDetailPage';
 import {
   ContactsPage,
   InterviewsPage,
@@ -75,6 +76,7 @@ export const router = createBrowserRouter([
         children: [
           { path: '/', element: <DashboardPage /> },
           { path: '/applications', element: <ApplicationsPage /> },
+          { path: '/applications/:id', element: <ApplicationDetailPage /> },
           { path: '/contacts', element: <ContactsPage /> },
           { path: '/interviews', element: <InterviewsPage /> },
           { path: '/documents', element: <DocumentsPage /> },
