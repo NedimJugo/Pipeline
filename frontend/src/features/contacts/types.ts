@@ -125,6 +125,11 @@ export interface LinkApplicationContactPayload {
   roleInProcess?: string | null;
 }
 
+export interface LinkContactToApplicationPayload {
+  contactId: string;
+  roleInProcess?: string | null;
+}
+
 export interface LogInteractionPayload {
   summary: string;
   contactId?: string | null;

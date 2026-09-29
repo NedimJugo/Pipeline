@@ -88,9 +88,9 @@ public class ApplicationsController : ControllerBase
     }
 
     [HttpPost("{id:guid}/contacts")]
-    public async Task<IActionResult> LinkContact(Guid id, [FromBody] LinkApplicationContactRequest request, CancellationToken ct)
+    public async Task<IActionResult> LinkContact(Guid id, [FromBody] LinkContactToAppRequest request, CancellationToken ct)
     {
-        await _contactService.LinkApplicationContactAsync(request.ApplicationId == id ? id : request.ApplicationId, request, ct);
+        await _contactService.LinkApplicationContactAsync(request.ContactId, new LinkApplicationContactRequest(id, request.RoleInProcess), ct);
         return NoContent();
     }
 

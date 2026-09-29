@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LogInteractionPayload, InteractionChannel, InteractionDirection } from '../types';
-import { useLogInteraction } from '../useContacts';
+import { useLogInteraction, useContacts } from '../useContacts';
 import { useApplications } from '@/features/applications/useApplications';
 import { X, MessageSquare, ArrowUpRight, ArrowDownLeft, Calendar, FileText } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -20,6 +20,7 @@ export const LogInteractionModal: React.FC<LogInteractionModalProps> = ({
   contactName,
   preselectedApplicationId,
 }) => {
+  const [selectedContactId, setSelectedContactId] = useState<string>(contactId || '');
   const [channel, setChannel] = useState<InteractionChannel>('Email');
   const [direction, setDirection] = useState<InteractionDirection>('Outbound');
   const [occurredAt, setOccurredAt] = useState<string>(
@@ -35,6 +36,7 @@ export const LogInteractionModal: React.FC<LogInteractionModalProps> = ({
 
   const logMutation = useLogInteraction();
   const { data: applications } = useApplications();
+  const { data: contacts } = useContacts();
 
   if (!isOpen) return null;
 
@@ -43,7 +45,7 @@ export const LogInteractionModal: React.FC<LogInteractionModalProps> = ({
     if (!summary.trim()) return;
 
     const payload: LogInteractionPayload = {
-      contactId: contactId || undefined,
+      contactId: contactId || selectedContactId || undefined,
       applicationId: applicationId || undefined,
       channel,
       direction,
@@ -155,6 +157,27 @@ export const LogInteractionModal: React.FC<LogInteractionModalProps> = ({
               />
             </div>
           </div>
+
+          {/* Linked Contact (when not preset) */}
+          {!contactId && (
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
+                Associated Contact (Optional)
+              </label>
+              <select
+                value={selectedContactId}
+                onChange={(e) => setSelectedContactId(e.target.value)}
+                className="w-full px-3 py-1.5 text-xs bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                <option value="">None / General Log</option>
+                {contacts?.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.fullName} {c.companyName ? `(${c.companyName})` : ''} — {c.role || c.type}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Linked Application */}
           <div>

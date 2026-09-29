@@ -70,7 +70,7 @@ export const contactsApi = {
     return res.data;
   },
 
-  linkApplicationContact: async (applicationId: string, payload: LinkApplicationContactPayload): Promise<void> => {
+  linkApplicationContact: async (applicationId: string, payload: { contactId: string; roleInProcess?: string | null }): Promise<void> => {
     await api.post(`/api/applications/${applicationId}/contacts`, payload);
   },
 

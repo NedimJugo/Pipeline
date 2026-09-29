@@ -134,3 +134,29 @@ export const useApplicationContacts = (applicationId: string | undefined) => {
     enabled: !!applicationId,
   });
 };
+
+export const useLinkContactToApplication = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ applicationId, payload }: { applicationId: string; payload: { contactId: string; roleInProcess?: string | null } }) =>
+      contactsApi.linkApplicationContact(applicationId, payload),
+    onSuccess: (_data, { applicationId, payload }) => {
+      queryClient.invalidateQueries({ queryKey: ['application-contacts', applicationId] });
+      queryClient.invalidateQueries({ queryKey: ['contact', payload.contactId] });
+      queryClient.invalidateQueries({ queryKey: ['contact-applications', payload.contactId] });
+    },
+  });
+};
+
+export const useUnlinkContactFromApplication = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ applicationId, contactId }: { applicationId: string; contactId: string }) =>
+      contactsApi.unlinkApplicationContact(applicationId, contactId),
+    onSuccess: (_data, { applicationId, contactId }) => {
+      queryClient.invalidateQueries({ queryKey: ['application-contacts', applicationId] });
+      queryClient.invalidateQueries({ queryKey: ['contact', contactId] });
+      queryClient.invalidateQueries({ queryKey: ['contact-applications', contactId] });
+    },
+  });
+};

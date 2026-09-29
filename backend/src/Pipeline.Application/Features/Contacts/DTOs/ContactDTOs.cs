@@ -83,3 +83,7 @@ public record ContactFilterDto(
 public record LinkApplicationContactRequest(
     Guid ApplicationId,
     string? RoleInProcess = null);
+
+public record LinkContactToAppRequest(
+    Guid ContactId,
+    string? RoleInProcess = null);
