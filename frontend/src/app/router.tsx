@@ -9,8 +9,9 @@ import { ApplicationsPage } from '@/features/applications/ApplicationsPage';
 import { ApplicationDetailPage } from '@/features/applications/ApplicationDetailPage';
 import { ContactsPage } from '@/features/contacts/ContactsPage';
 import { ContactDetailPage } from '@/features/contacts/ContactDetailPage';
+import { InterviewsPage } from '@/features/interviews/InterviewsPage';
+import { InterviewDetailPage } from '@/features/interviews/InterviewDetailPage';
 import {
-  InterviewsPage,
   DocumentsPage,
   TasksPage,
   ReferencesPage,
@@ -81,6 +82,7 @@ export const router = createBrowserRouter([
           { path: '/contacts', element: <ContactsPage /> },
           { path: '/contacts/:id', element: <ContactDetailPage /> },
           { path: '/interviews', element: <InterviewsPage /> },
+          { path: '/interviews/:id', element: <InterviewDetailPage /> },
           { path: '/documents', element: <DocumentsPage /> },
           { path: '/tasks', element: <TasksPage /> },
           { path: '/references', element: <ReferencesPage /> },

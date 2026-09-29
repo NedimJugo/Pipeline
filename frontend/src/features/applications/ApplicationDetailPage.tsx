@@ -13,6 +13,7 @@ import { ApplicationTimeline } from './components/ApplicationTimeline';
 import { EditApplicationModal } from './components/EditApplicationModal';
 import { TerminalStatusModal } from './components/TerminalStatusModal';
 import { ApplicationContactsTab } from './components/ApplicationContactsTab';
+import { ApplicationInterviewsTab } from './components/ApplicationInterviewsTab';
 import {
   ArrowLeft,
   Building2,
@@ -35,7 +36,7 @@ import {
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
-type TabType = 'overview' | 'timeline' | 'contacts' | 'job_description' | 'closing_offer';
+type TabType = 'overview' | 'timeline' | 'contacts' | 'interviews' | 'job_description' | 'closing_offer';
 
 export const ApplicationDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -301,6 +302,7 @@ export const ApplicationDetailPage: React.FC = () => {
           { key: 'overview', label: 'Overview' },
           { key: 'timeline', label: 'Timeline & History' },
           { key: 'contacts', label: 'Contacts & Network' },
+          { key: 'interviews', label: 'Interviews & Prep' },
           { key: 'job_description', label: 'Job Description' },
           { key: 'closing_offer', label: 'Offer & Closure' },
         ].map((tab) => (
@@ -439,7 +441,16 @@ export const ApplicationDetailPage: React.FC = () => {
           />
         )}
 
-        {/* TAB 4: JOB DESCRIPTION */}
+        {/* TAB 4: INTERVIEWS */}
+        {activeTab === 'interviews' && (
+          <ApplicationInterviewsTab
+            applicationId={application.id}
+            roleTitle={application.roleTitle}
+            companyName={application.companyName}
+          />
+        )}
+
+        {/* TAB 5: JOB DESCRIPTION */}
         {activeTab === 'job_description' && (
           <JobDescriptionHighlighter
             jobDescription={application.jobDescription}
