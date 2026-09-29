@@ -7,8 +7,8 @@ import { RegisterPage } from '@/features/auth/RegisterPage';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
 import { ApplicationsPage } from '@/features/applications/ApplicationsPage';
 import { ApplicationDetailPage } from '@/features/applications/ApplicationDetailPage';
+import { ContactsPage } from '@/features/contacts/ContactsPage';
 import {
-  ContactsPage,
   InterviewsPage,
   DocumentsPage,
   TasksPage,
