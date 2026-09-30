@@ -16,9 +16,9 @@ import { TemplatesPage } from '@/features/templates/TemplatesPage';
 import { TasksPage } from '@/features/tasks/TasksPage';
 import { ReferencesPage } from '@/features/references/ReferencesPage';
 import { OfferComparisonPage } from '@/features/offers/OfferComparisonPage';
+import { AnalyticsPage } from '@/features/analytics/AnalyticsPage';
+import { CalendarPage } from '@/features/calendar/CalendarPage';
 import {
-  AnalyticsPage,
-  CalendarPage,
   DiscoveryPage,
   SettingsPage,
 } from '@/features/placeholders';

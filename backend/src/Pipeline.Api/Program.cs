@@ -137,6 +137,8 @@ builder.Services.AddScoped<Pipeline.Application.Features.Automation.Services.IAu
 builder.Services.AddScoped<Pipeline.Application.Features.Dashboard.Services.IDashboardService, DashboardService>();
 builder.Services.AddScoped<Pipeline.Application.Features.References.Services.IReferenceService, ReferenceService>();
 builder.Services.AddScoped<Pipeline.Application.Features.Offers.Services.IOfferService, OfferService>();
+builder.Services.AddScoped<Pipeline.Application.Features.Analytics.Services.IAnalyticsService, AnalyticsService>();
+builder.Services.AddScoped<Pipeline.Application.Features.Calendar.Services.ICalendarService, CalendarService>();
 builder.Services.AddHostedService<AutomationBackgroundService>();
 
 // CORS Configuration

@@ -51,6 +51,12 @@ public class PipelineDbContext : IdentityDbContext<User, IdentityRole<Guid>, Gui
     {
         base.OnModelCreating(builder);
 
+        // User configuration
+        builder.Entity<User>(b =>
+        {
+            b.HasIndex(u => u.CalendarFeedToken).IsUnique();
+        });
+
         // Application relations
         builder.Entity<JobApplication>(b =>
         {
