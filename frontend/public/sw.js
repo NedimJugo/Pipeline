@@ -3,7 +3,7 @@ const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
-  '/vite.svg',
+  '/app_icon.png',
 ];
 
 self.addEventListener('install', (event) => {

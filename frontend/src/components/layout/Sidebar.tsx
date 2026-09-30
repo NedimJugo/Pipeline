@@ -44,9 +44,11 @@ export const Sidebar: React.FC = () => {
   return (
     <aside className="w-64 border-r border-border bg-card/60 backdrop-blur-md flex flex-col h-screen sticky top-0 select-none">
       <div className="h-16 flex items-center px-6 border-b border-border/80 gap-3">
-        <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-500/20">
-          P
-        </div>
+        <img
+          src="/app_icon.png"
+          alt="Pipeline Logo"
+          className="h-8 w-8 rounded-lg object-contain shadow-md shadow-indigo-500/20"
+        />
         <div>
           <span className="font-bold tracking-tight text-base block leading-none">Pipeline</span>
           <span className="text-[11px] text-muted-foreground font-medium">Command Center</span>

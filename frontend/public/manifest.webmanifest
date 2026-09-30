@@ -4,8 +4,8 @@
   "description": "Personal CRM and command center for managing applications, interviews, contacts, and offers",
   "icons": [
     {
-      "src": "/vite.svg",
-      "type": "image/svg+xml",
+      "src": "/app_icon.png",
+      "type": "image/png",
       "sizes": "192x192 512x512"
     }
   ],

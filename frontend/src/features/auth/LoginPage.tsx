@@ -36,9 +36,11 @@ export const LoginPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="max-w-md w-full border border-border bg-card p-8 rounded-xl shadow-lg">
         <div className="text-center mb-8">
-          <div className="h-12 w-12 rounded-xl bg-indigo-600 text-white font-bold text-xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-indigo-500/30">
-            P
-          </div>
+          <img
+            src="/app_icon.png"
+            alt="Pipeline Logo"
+            className="h-16 w-16 rounded-2xl mx-auto mb-3 shadow-lg shadow-indigo-500/20 object-contain"
+          />
           <h1 className="text-2xl font-bold tracking-tight">Welcome back to Pipeline</h1>
           <p className="text-sm text-muted-foreground mt-1">Your command center for landing your next role</p>
         </div>

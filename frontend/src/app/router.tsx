@@ -28,9 +28,11 @@ const ProtectedRoute: React.FC = () => {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-indigo-600 text-white font-bold flex items-center justify-center animate-pulse">
-            P
-          </div>
+          <img
+            src="/app_icon.png"
+            alt="Pipeline"
+            className="h-10 w-10 rounded-xl object-contain animate-pulse shadow-md shadow-indigo-500/20"
+          />
           <span className="text-xs text-muted-foreground font-medium">Loading command center...</span>
         </div>
       </div>

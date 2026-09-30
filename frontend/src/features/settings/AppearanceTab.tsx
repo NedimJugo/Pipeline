@@ -77,10 +77,12 @@ export const AppearanceTab: React.FC = () => {
 
       {/* PWA & Offline Support */}
       <div className="bg-card border border-border rounded-xl p-6 shadow-xs space-y-4">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-primary/10 text-primary">
-            <Smartphone className="h-5 w-5" />
-          </div>
+        <div className="flex items-center gap-3">
+          <img
+            src="/app_icon.png"
+            alt="Pipeline App"
+            className="h-10 w-10 rounded-xl shadow-xs object-contain border border-border"
+          />
           <div>
             <h2 className="text-base font-bold tracking-tight">Progressive Web App (PWA) & Offline Mode</h2>
             <p className="text-xs text-muted-foreground mt-0.5">
