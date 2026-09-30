@@ -140,6 +140,8 @@ builder.Services.AddScoped<Pipeline.Application.Features.Offers.Services.IOfferS
 builder.Services.AddScoped<Pipeline.Application.Features.Analytics.Services.IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<Pipeline.Application.Features.Calendar.Services.ICalendarService, CalendarService>();
 builder.Services.AddScoped<Pipeline.Application.Features.Users.Services.IUserService, UserService>();
+builder.Services.AddScoped<Pipeline.Application.Features.Discovery.Services.IJobSourceConnector, SampleJobConnector>();
+builder.Services.AddScoped<Pipeline.Application.Features.Discovery.Services.IJobDiscoveryService, JobDiscoveryService>();
 builder.Services.AddHostedService<AutomationBackgroundService>();
 
 // CORS Configuration

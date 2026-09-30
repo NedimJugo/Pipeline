@@ -17,7 +17,14 @@ import {
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
-const navItems = [
+interface NavItem {
+  to: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badge?: string;
+}
+
+const navItems: NavItem[] = [
   { to: '/', label: 'Today', icon: LayoutDashboard },
   { to: '/applications', label: 'Applications', icon: KanbanSquare },
   { to: '/contacts', label: 'Contacts', icon: Users },
@@ -29,7 +36,7 @@ const navItems = [
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
   { to: '/calendar', label: 'Calendar', icon: CalendarIcon },
   { to: '/templates', label: 'Templates', icon: Mail },
-  { to: '/discovery', label: 'Discovery', icon: Compass, badge: 'Soon' },
+  { to: '/discovery', label: 'Discovery', icon: Compass },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
 

@@ -19,7 +19,7 @@ import { OfferComparisonPage } from '@/features/offers/OfferComparisonPage';
 import { AnalyticsPage } from '@/features/analytics/AnalyticsPage';
 import { CalendarPage } from '@/features/calendar/CalendarPage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
-import { DiscoveryPage } from '@/features/placeholders';
+import { DiscoveryPage } from '@/features/discovery/DiscoveryPage';
 
 const ProtectedRoute: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
