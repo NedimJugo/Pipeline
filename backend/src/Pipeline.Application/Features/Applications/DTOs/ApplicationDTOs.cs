@@ -63,8 +63,10 @@ public record ApplicationDetailDto(
     string? RejectionStage,
     string? LessonsLearned,
     decimal? OfferSalary,
+    decimal? OfferBonus,
     string? OfferBenefits,
     DateTime? OfferDeadline,
+    string? OfferNegotiationNotes,
     DateTime CreatedAt,
     DateTime UpdatedAt);
 
@@ -115,8 +117,10 @@ public record UpdateApplicationRequest(
     bool Favorite = false,
     int ExcitementRating = 3,
     decimal? OfferSalary = null,
+    decimal? OfferBonus = null,
     string? OfferBenefits = null,
     DateTime? OfferDeadline = null,
+    string? OfferNegotiationNotes = null,
     string? ClosedReason = null,
     string? RejectionStage = null,
     string? LessonsLearned = null,

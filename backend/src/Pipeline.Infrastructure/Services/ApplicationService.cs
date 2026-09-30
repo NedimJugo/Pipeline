@@ -240,8 +240,10 @@ public class ApplicationService : IApplicationService
         app.ExcitementRating = request.ExcitementRating;
 
         if (request.OfferSalary.HasValue) app.OfferSalary = request.OfferSalary;
+        if (request.OfferBonus.HasValue) app.OfferBonus = request.OfferBonus;
         if (request.OfferBenefits != null) app.OfferBenefits = request.OfferBenefits;
         if (request.OfferDeadline.HasValue) app.OfferDeadline = request.OfferDeadline;
+        if (request.OfferNegotiationNotes != null) app.OfferNegotiationNotes = request.OfferNegotiationNotes;
         if (request.ClosedReason != null) app.ClosedReason = request.ClosedReason;
         if (request.RejectionStage != null) app.RejectionStage = request.RejectionStage;
         if (request.LessonsLearned != null) app.LessonsLearned = request.LessonsLearned;
@@ -485,8 +487,10 @@ public class ApplicationService : IApplicationService
             RejectionStage: a.RejectionStage,
             LessonsLearned: a.LessonsLearned,
             OfferSalary: a.OfferSalary,
+            OfferBonus: a.OfferBonus,
             OfferBenefits: a.OfferBenefits,
             OfferDeadline: a.OfferDeadline,
+            OfferNegotiationNotes: a.OfferNegotiationNotes,
             CreatedAt: a.CreatedAt,
             UpdatedAt: a.UpdatedAt);
 }

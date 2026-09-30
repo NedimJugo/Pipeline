@@ -82,8 +82,10 @@ export interface ApplicationDetail {
   rejectionStage?: string | null;
   lessonsLearned?: string | null;
   offerSalary?: number | null;
+  offerBonus?: number | null;
   offerBenefits?: string | null;
   offerDeadline?: string | null;
+  offerNegotiationNotes?: string | null;
   createdAt: string;
   updatedAt: string;
 }

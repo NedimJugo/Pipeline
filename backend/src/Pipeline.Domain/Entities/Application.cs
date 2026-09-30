@@ -45,8 +45,10 @@ public class Application : BaseEntity, IUserOwnedEntity, ISoftDeletable
 
     // Offer details
     public decimal? OfferSalary { get; set; }
+    public decimal? OfferBonus { get; set; }
     public string? OfferBenefits { get; set; }
     public DateTime? OfferDeadline { get; set; }
+    public string? OfferNegotiationNotes { get; set; }
 
     // Aggregator placeholder
     public Guid? DiscoveredJobId { get; set; }

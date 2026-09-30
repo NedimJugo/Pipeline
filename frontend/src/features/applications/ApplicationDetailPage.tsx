@@ -16,6 +16,7 @@ import { ApplicationContactsTab } from './components/ApplicationContactsTab';
 import { ApplicationInterviewsTab } from './components/ApplicationInterviewsTab';
 import { ApplicationDocumentsTab } from './components/ApplicationDocumentsTab';
 import { EmailTemplatePickerModal } from '@/features/templates/EmailTemplatePickerModal';
+import { EditOfferModal } from '@/features/offers/EditOfferModal';
 import {
   ArrowLeft,
   Building2,
@@ -23,6 +24,7 @@ import {
   MapPin,
   Calendar,
   DollarSign,
+  Scale,
   Copy,
   Trash2,
   Edit3,
@@ -56,6 +58,7 @@ export const ApplicationDetailPage: React.FC = () => {
   const [targetTerminalStatus, setTargetTerminalStatus] = useState<ApplicationStatus>('Rejected');
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [isTemplatePickerOpen, setIsTemplatePickerOpen] = useState(false);
+  const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -482,43 +485,93 @@ export const ApplicationDetailPage: React.FC = () => {
           <div className="max-w-2xl space-y-6">
             {/* Offer section */}
             <div className="bg-card border border-border rounded-xl p-5 space-y-4 shadow-2xs">
-              <div className="flex items-center gap-2">
-                <Award className="h-5 w-5 text-amber-500" />
-                <h3 className="text-sm font-bold text-foreground">Offer Details</h3>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <Award className="h-5 w-5 text-amber-500" />
+                  <h3 className="text-sm font-bold text-foreground">Offer Details</h3>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsOfferModalOpen(true)}
+                    className="px-3 py-1.5 text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-colors shadow-xs flex items-center gap-1.5"
+                  >
+                    <Edit3 className="h-3.5 w-3.5" />
+                    <span>{application.offerSalary || application.offerBenefits || application.offerDeadline ? 'Edit Terms' : 'Record Offer'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/offer-compare?ids=${application.id}`)}
+                    className="px-3 py-1.5 text-xs font-semibold bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-md transition-colors flex items-center gap-1.5"
+                    title="Compare side-by-side with other offers"
+                  >
+                    <Scale className="h-3.5 w-3.5" />
+                    <span>Compare Offers</span>
+                  </button>
+                </div>
               </div>
 
-              {application.offerSalary || application.offerBenefits || application.offerDeadline ? (
-                <div className="space-y-3 text-xs">
-                  {application.offerSalary && (
+              {application.offerSalary || application.offerBonus || application.offerBenefits || application.offerDeadline || application.offerNegotiationNotes ? (
+                <div className="space-y-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-lg bg-muted/20 border border-border">
                     <div>
-                      <span className="text-muted-foreground block text-[11px]">Offered Salary</span>
-                      <span className="font-bold text-foreground text-sm">
-                        {application.currency} {application.offerSalary.toLocaleString()}
+                      <span className="text-muted-foreground block text-[11px]">Total Compensation (Yr 1)</span>
+                      <span className="font-extrabold text-foreground text-base">
+                        {application.currency} {((application.offerSalary || 0) + (application.offerBonus || 0)).toLocaleString()}
                       </span>
                     </div>
-                  )}
 
-                  {application.offerDeadline && (
-                    <div>
-                      <span className="text-muted-foreground block text-[11px]">Decision Deadline</span>
-                      <span className="font-semibold text-foreground font-mono">
-                        {new Date(application.offerDeadline).toLocaleDateString()}
-                      </span>
-                    </div>
-                  )}
+                    {application.offerDeadline && (
+                      <div>
+                        <span className="text-muted-foreground block text-[11px]">Decision Deadline</span>
+                        <span className="font-semibold text-foreground font-mono">
+                          {new Date(application.offerDeadline).toLocaleDateString()}
+                        </span>
+                      </div>
+                    )}
+
+                    {application.offerSalary && (
+                      <div>
+                        <span className="text-muted-foreground block text-[11px]">Base Salary</span>
+                        <span className="font-medium text-foreground">
+                          {application.currency} {application.offerSalary.toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+
+                    {application.offerBonus && (
+                      <div>
+                        <span className="text-muted-foreground block text-[11px]">Bonus / Sign-on</span>
+                        <span className="font-medium text-foreground">
+                          {application.currency} {application.offerBonus.toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+                  </div>
 
                   {application.offerBenefits && (
                     <div>
-                      <span className="text-muted-foreground block text-[11px]">Benefits Package</span>
-                      <p className="text-foreground/90 whitespace-pre-wrap mt-0.5">
+                      <span className="text-muted-foreground block text-[11px] font-semibold uppercase tracking-wider mb-1">Benefits Package</span>
+                      <p className="text-foreground/90 whitespace-pre-wrap bg-muted/30 p-2.5 rounded-lg border border-border">
                         {application.offerBenefits}
+                      </p>
+                    </div>
+                  )}
+
+                  {application.offerNegotiationNotes && (
+                    <div>
+                      <span className="text-muted-foreground block text-[11px] font-semibold uppercase tracking-wider mb-1">Negotiation Strategy & Notes</span>
+                      <p className="text-foreground/90 whitespace-pre-wrap bg-muted/30 p-2.5 rounded-lg border border-border italic">
+                        "{application.offerNegotiationNotes}"
                       </p>
                     </div>
                   )}
                 </div>
               ) : (
                 <p className="text-xs text-muted-foreground">
-                  No offer terms recorded for this application. Once an offer is extended, record compensation, equity, and deadlines here.
+                  No offer terms recorded for this application yet. When an offer is extended, click "Record Offer" above to log compensation, bonuses, benefits, and decision deadlines.
                 </p>
               )}
             </div>
@@ -641,6 +694,23 @@ export const ApplicationDetailPage: React.FC = () => {
         applicationId={application.id}
         defaultCategory="FollowUp"
       />
+
+      {/* Edit Offer Modal */}
+      {isOfferModalOpen && (
+        <EditOfferModal
+          isOpen={isOfferModalOpen}
+          onClose={() => setIsOfferModalOpen(false)}
+          applicationId={application.id}
+          roleTitle={application.roleTitle}
+          companyName={application.companyName}
+          currency={application.currency}
+          initialSalary={application.offerSalary}
+          initialBonus={application.offerBonus}
+          initialBenefits={application.offerBenefits}
+          initialDeadline={application.offerDeadline}
+          initialNotes={application.offerNegotiationNotes}
+        />
+      )}
     </div>
   );
 };

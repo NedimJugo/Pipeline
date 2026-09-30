@@ -14,9 +14,9 @@ import { InterviewDetailPage } from '@/features/interviews/InterviewDetailPage';
 import { DocumentsPage } from '@/features/documents/DocumentsPage';
 import { TemplatesPage } from '@/features/templates/TemplatesPage';
 import { TasksPage } from '@/features/tasks/TasksPage';
+import { ReferencesPage } from '@/features/references/ReferencesPage';
+import { OfferComparisonPage } from '@/features/offers/OfferComparisonPage';
 import {
-  ReferencesPage,
-  OffersPage,
   AnalyticsPage,
   CalendarPage,
   DiscoveryPage,
@@ -86,7 +86,8 @@ export const router = createBrowserRouter([
           { path: '/documents', element: <DocumentsPage /> },
           { path: '/tasks', element: <TasksPage /> },
           { path: '/references', element: <ReferencesPage /> },
-          { path: '/offers', element: <OffersPage /> },
+          { path: '/offers', element: <OfferComparisonPage /> },
+          { path: '/offer-compare', element: <OfferComparisonPage /> },
           { path: '/analytics', element: <AnalyticsPage /> },
           { path: '/calendar', element: <CalendarPage /> },
           { path: '/templates', element: <TemplatesPage /> },

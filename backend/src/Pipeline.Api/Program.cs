@@ -135,6 +135,8 @@ builder.Services.AddScoped<Pipeline.Application.Features.Tasks.Services.ITaskSer
 builder.Services.AddScoped<Pipeline.Application.Features.Templates.Services.IEmailTemplateService, EmailTemplateService>();
 builder.Services.AddScoped<Pipeline.Application.Features.Automation.Services.IAutomationRuleEngine, AutomationRuleEngine>();
 builder.Services.AddScoped<Pipeline.Application.Features.Dashboard.Services.IDashboardService, DashboardService>();
+builder.Services.AddScoped<Pipeline.Application.Features.References.Services.IReferenceService, ReferenceService>();
+builder.Services.AddScoped<Pipeline.Application.Features.Offers.Services.IOfferService, OfferService>();
 builder.Services.AddHostedService<AutomationBackgroundService>();
 
 // CORS Configuration
