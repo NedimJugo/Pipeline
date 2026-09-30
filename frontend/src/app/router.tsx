@@ -12,13 +12,13 @@ import { ContactDetailPage } from '@/features/contacts/ContactDetailPage';
 import { InterviewsPage } from '@/features/interviews/InterviewsPage';
 import { InterviewDetailPage } from '@/features/interviews/InterviewDetailPage';
 import { DocumentsPage } from '@/features/documents/DocumentsPage';
+import { TemplatesPage } from '@/features/templates/TemplatesPage';
+import { TasksPage } from '@/features/tasks/TasksPage';
 import {
-  TasksPage,
   ReferencesPage,
   OffersPage,
   AnalyticsPage,
   CalendarPage,
-  TemplatesPage,
   DiscoveryPage,
   SettingsPage,
 } from '@/features/placeholders';

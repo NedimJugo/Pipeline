@@ -11,11 +11,14 @@ import {
   Copy,
   Sparkles,
   FileCheck,
+  Send,
 } from 'lucide-react';
 import { clsx } from 'clsx';
+import { EmailTemplatePickerModal } from '@/features/templates/EmailTemplatePickerModal';
 
 interface DebriefCardProps {
   interviewId: string;
+  applicationId?: string;
   roleTitle: string;
   companyName: string;
   initialSelfRating?: number | null;
@@ -27,6 +30,7 @@ interface DebriefCardProps {
 
 export const DebriefCard: React.FC<DebriefCardProps> = ({
   interviewId,
+  applicationId,
   roleTitle,
   companyName,
   initialSelfRating,
@@ -42,6 +46,7 @@ export const DebriefCard: React.FC<DebriefCardProps> = ({
   const [outcomeNotes, setOutcomeNotes] = useState(initialOutcomeNotes || '');
   const [copiedTemplate, setCopiedTemplate] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   const updateMutation = useUpdateDebrief();
 
@@ -201,23 +206,34 @@ Best regards,
             </span>
           </label>
 
-          <button
-            type="button"
-            onClick={handleCopyTemplate}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-card border border-border hover:bg-muted text-foreground rounded-lg transition-colors self-start sm:self-auto shadow-2xs"
-          >
-            {copiedTemplate ? (
-              <>
-                <Check className="h-3.5 w-3.5 text-emerald-500" />
-                <span>Template Copied!</span>
-              </>
-            ) : (
-              <>
-                <Copy className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>Copy Thank-You Email Template</span>
-              </>
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsPickerOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-primary/10 border border-primary/20 hover:bg-primary/20 text-primary rounded-lg transition-colors self-start sm:self-auto shadow-2xs"
+            >
+              <Send className="h-3.5 w-3.5" />
+              <span>Customize & Send Template</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleCopyTemplate}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-card border border-border hover:bg-muted text-foreground rounded-lg transition-colors self-start sm:self-auto shadow-2xs"
+            >
+              {copiedTemplate ? (
+                <>
+                  <Check className="h-3.5 w-3.5 text-emerald-500" />
+                  <span>Template Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span>Copy Thank-You Email Template</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
         <p className="text-[11px] text-muted-foreground">
           Tip: Sending a tailored thank-you within 24 hours reinforces your interest and gives an opportunity to clarify points discussed during the interview.
@@ -249,6 +265,14 @@ Best regards,
           <span>{updateMutation.isPending ? 'Saving Debrief...' : 'Save Debrief'}</span>
         </button>
       </div>
+
+      {/* Email Template Picker Modal */}
+      <EmailTemplatePickerModal
+        isOpen={isPickerOpen}
+        onClose={() => setIsPickerOpen(false)}
+        applicationId={applicationId}
+        defaultCategory="ThankYou"
+      />
     </form>
   );
 };

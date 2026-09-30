@@ -15,6 +15,7 @@ import { TerminalStatusModal } from './components/TerminalStatusModal';
 import { ApplicationContactsTab } from './components/ApplicationContactsTab';
 import { ApplicationInterviewsTab } from './components/ApplicationInterviewsTab';
 import { ApplicationDocumentsTab } from './components/ApplicationDocumentsTab';
+import { EmailTemplatePickerModal } from '@/features/templates/EmailTemplatePickerModal';
 import {
   ArrowLeft,
   Building2,
@@ -25,6 +26,7 @@ import {
   Copy,
   Trash2,
   Edit3,
+  Mail,
   ThumbsUp,
   ThumbsDown,
   Star,
@@ -53,6 +55,7 @@ export const ApplicationDetailPage: React.FC = () => {
   const [isTerminalModalOpen, setIsTerminalModalOpen] = useState(false);
   const [targetTerminalStatus, setTargetTerminalStatus] = useState<ApplicationStatus>('Rejected');
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isTemplatePickerOpen, setIsTemplatePickerOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -137,6 +140,15 @@ export const ApplicationDetailPage: React.FC = () => {
 
         {/* Quick action buttons */}
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setIsTemplatePickerOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-primary/10 border border-primary/20 rounded-lg hover:bg-primary/20 text-primary transition-colors shadow-2xs"
+          >
+            <Mail className="h-3.5 w-3.5" />
+            <span>Send Follow-up</span>
+          </button>
+
           <button
             type="button"
             onClick={() => setIsEditModalOpen(true)}
@@ -621,6 +633,14 @@ export const ApplicationDetailPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Email Template Picker Modal */}
+      <EmailTemplatePickerModal
+        isOpen={isTemplatePickerOpen}
+        onClose={() => setIsTemplatePickerOpen(false)}
+        applicationId={application.id}
+        defaultCategory="FollowUp"
+      />
     </div>
   );
 };

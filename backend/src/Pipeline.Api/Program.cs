@@ -131,6 +131,11 @@ builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IInteractionService, InteractionService>();
 builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddScoped<Pipeline.Application.Features.Documents.Services.IDocumentService, DocumentService>();
+builder.Services.AddScoped<Pipeline.Application.Features.Tasks.Services.ITaskService, TaskService>();
+builder.Services.AddScoped<Pipeline.Application.Features.Templates.Services.IEmailTemplateService, EmailTemplateService>();
+builder.Services.AddScoped<Pipeline.Application.Features.Automation.Services.IAutomationRuleEngine, AutomationRuleEngine>();
+builder.Services.AddScoped<Pipeline.Application.Features.Dashboard.Services.IDashboardService, DashboardService>();
+builder.Services.AddHostedService<AutomationBackgroundService>();
 
 // CORS Configuration
 var frontendOrigin = builder.Configuration["Frontend:Origin"] 

@@ -311,6 +311,7 @@ export const InterviewDetailPage: React.FC = () => {
         {activeTab === 'debrief' && (
           <DebriefCard
             interviewId={interview.id}
+            applicationId={interview.applicationId}
             roleTitle={interview.roleTitle}
             companyName={interview.companyName}
             initialSelfRating={interview.selfRating}
