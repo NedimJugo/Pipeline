@@ -21,7 +21,7 @@ export const Header: React.FC = () => {
         <button
           type="button"
           className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-background/50 hover:bg-muted text-muted-foreground hover:text-foreground text-xs transition-colors"
-          onClick={() => {}}
+          onClick={() => window.dispatchEvent(new CustomEvent('pipeline_open_command_palette'))}
         >
           <Search className="h-3.5 w-3.5" />
           <span>Quick search applications, contacts...</span>

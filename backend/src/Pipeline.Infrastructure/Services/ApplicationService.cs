@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +10,7 @@ using Pipeline.Application.Common.Interfaces;
 using Pipeline.Application.Features.Applications.DTOs;
 using Pipeline.Application.Features.Applications.Services;
 using Pipeline.Application.Features.Companies.Services;
+using Pipeline.Application.Features.Users.DTOs;
 using Pipeline.Domain.Entities;
 using Pipeline.Domain.Enums;
 using Pipeline.Infrastructure.Persistence;
@@ -493,4 +496,294 @@ public class ApplicationService : IApplicationService
             OfferNegotiationNotes: a.OfferNegotiationNotes,
             CreatedAt: a.CreatedAt,
             UpdatedAt: a.UpdatedAt);
+
+    public async Task<byte[]> ExportApplicationsCsvAsync(CancellationToken ct = default)
+    {
+        var apps = await _dbContext.Applications
+            .Include(a => a.Company)
+            .OrderByDescending(a => a.CreatedAt)
+            .ToListAsync(ct);
+
+        var sb = new StringBuilder();
+        sb.AppendLine("CompanyName,RoleTitle,Status,Source,WorkMode,EmploymentType,Location,SalaryMin,SalaryMax,Currency,AppliedAt,ExcitementRating,Priority,JobUrl,Notes");
+
+        foreach (var a in apps)
+        {
+            sb.AppendLine(string.Join(",",
+                EscapeCsv(a.Company?.Name ?? ""),
+                EscapeCsv(a.RoleTitle),
+                EscapeCsv(a.Status.ToString()),
+                EscapeCsv(a.Source.ToString()),
+                EscapeCsv(a.WorkMode.ToString()),
+                EscapeCsv(a.EmploymentType.ToString()),
+                EscapeCsv(a.Location ?? ""),
+                a.SalaryMin?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "",
+                a.SalaryMax?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "",
+                EscapeCsv(a.Currency),
+                a.AppliedAt?.ToString("yyyy-MM-dd") ?? "",
+                a.ExcitementRating.ToString(),
+                a.Priority.ToString(),
+                EscapeCsv(a.JobUrl ?? ""),
+                EscapeCsv(a.Notes ?? "")
+            ));
+        }
+
+        return Encoding.UTF8.GetBytes(sb.ToString());
+    }
+
+    public async Task<CsvImportResultDto> ImportApplicationsCsvAsync(Stream csvStream, CancellationToken ct = default)
+    {
+        using var reader = new StreamReader(csvStream, Encoding.UTF8);
+        var content = await reader.ReadToEndAsync(ct);
+        var rows = ParseCsv(content);
+
+        if (rows.Count == 0)
+        {
+            return new CsvImportResultDto(0, 0, 0, 0, new List<CsvImportError>());
+        }
+
+        var headerRow = rows[0];
+        var headerMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        for (int i = 0; i < headerRow.Count; i++)
+        {
+            var clean = headerRow[i].Trim().Replace(" ", "").Replace("_", "").ToLowerInvariant();
+            if (!headerMap.ContainsKey(clean))
+            {
+                headerMap[clean] = i;
+            }
+        }
+
+        string GetCell(List<string> row, params string[] names)
+        {
+            foreach (var n in names)
+            {
+                var clean = n.Replace(" ", "").Replace("_", "").ToLowerInvariant();
+                if (headerMap.TryGetValue(clean, out var idx) && idx < row.Count)
+                {
+                    return row[idx].Trim();
+                }
+            }
+            return "";
+        }
+
+        var userId = _currentUserService.UserId ?? Guid.Empty;
+        int totalProcessed = 0;
+        int createdCount = 0;
+        int updatedCount = 0;
+        int failedCount = 0;
+        var errors = new List<CsvImportError>();
+
+        for (int r = 1; r < rows.Count; r++)
+        {
+            var row = rows[r];
+            if (row.All(string.IsNullOrWhiteSpace)) continue;
+
+            totalProcessed++;
+            var companyName = GetCell(row, "companyname", "company");
+            var roleTitle = GetCell(row, "roletitle", "role", "jobtitle", "title");
+
+            if (string.IsNullOrWhiteSpace(roleTitle))
+            {
+                failedCount++;
+                errors.Add(new CsvImportError(r, "RoleTitle", "RoleTitle is required."));
+                continue;
+            }
+            if (string.IsNullOrWhiteSpace(companyName))
+            {
+                failedCount++;
+                errors.Add(new CsvImportError(r, "CompanyName", "CompanyName is required."));
+                continue;
+            }
+
+            try
+            {
+                var company = await _companyService.GetOrCreateCompanyAsync(companyName, null, ct);
+
+                var statusStr = GetCell(row, "status");
+                var status = Enum.TryParse<ApplicationStatus>(statusStr, true, out var parsedStatus)
+                    ? parsedStatus : ApplicationStatus.Wishlist;
+
+                var sourceStr = GetCell(row, "source");
+                var source = Enum.TryParse<ApplicationSource>(sourceStr, true, out var parsedSource)
+                    ? parsedSource : ApplicationSource.Other;
+
+                var workModeStr = GetCell(row, "workmode");
+                var workMode = Enum.TryParse<WorkMode>(workModeStr, true, out var parsedMode)
+                    ? parsedMode : WorkMode.Remote;
+
+                var empStr = GetCell(row, "employmenttype", "type");
+                var employmentType = Enum.TryParse<EmploymentType>(empStr, true, out var parsedEmp)
+                    ? parsedEmp : EmploymentType.FullTime;
+
+                var location = GetCell(row, "location");
+                var jobUrl = GetCell(row, "joburl", "url", "link");
+                var notes = GetCell(row, "notes", "note", "description");
+
+                decimal? salaryMin = decimal.TryParse(GetCell(row, "salarymin", "salary"), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var sMin) ? sMin : null;
+                decimal? salaryMax = decimal.TryParse(GetCell(row, "salarymax"), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var sMax) ? sMax : null;
+                var currency = GetCell(row, "currency");
+                if (string.IsNullOrWhiteSpace(currency)) currency = "USD";
+
+                DateTime? appliedAt = DateTime.TryParse(GetCell(row, "appliedat", "dateapplied"), out var appDate) ? DateTime.SpecifyKind(appDate, DateTimeKind.Utc) : null;
+                int excitement = int.TryParse(GetCell(row, "excitementrating", "excitement"), out var exc) ? Math.Clamp(exc, 1, 5) : 3;
+                int priority = int.TryParse(GetCell(row, "priority"), out var prio) ? Math.Clamp(prio, 1, 3) : 2;
+
+                var existing = await _dbContext.Applications
+                    .FirstOrDefaultAsync(a => a.CompanyId == company.Id && a.RoleTitle.ToLower() == roleTitle.ToLower(), ct);
+
+                if (existing != null)
+                {
+                    existing.Status = status;
+                    existing.Source = source;
+                    existing.WorkMode = workMode;
+                    existing.EmploymentType = employmentType;
+                    if (!string.IsNullOrWhiteSpace(location)) existing.Location = location;
+                    if (!string.IsNullOrWhiteSpace(jobUrl)) existing.JobUrl = jobUrl;
+                    if (!string.IsNullOrWhiteSpace(notes)) existing.Notes = notes;
+                    if (salaryMin.HasValue) existing.SalaryMin = salaryMin;
+                    if (salaryMax.HasValue) existing.SalaryMax = salaryMax;
+                    existing.Currency = currency;
+                    if (appliedAt.HasValue) existing.AppliedAt = appliedAt;
+                    existing.ExcitementRating = excitement;
+                    existing.Priority = priority;
+                    existing.UpdatedAt = DateTime.UtcNow;
+                    updatedCount++;
+                }
+                else
+                {
+                    var now = DateTime.UtcNow;
+                    var newApp = new JobApplication
+                    {
+                        Id = Guid.NewGuid(),
+                        UserId = userId,
+                        CompanyId = company.Id,
+                        RoleTitle = roleTitle,
+                        Status = status,
+                        StatusChangedAt = now,
+                        Source = source,
+                        WorkMode = workMode,
+                        EmploymentType = employmentType,
+                        Location = string.IsNullOrWhiteSpace(location) ? null : location,
+                        JobUrl = string.IsNullOrWhiteSpace(jobUrl) ? null : jobUrl,
+                        Notes = string.IsNullOrWhiteSpace(notes) ? null : notes,
+                        SalaryMin = salaryMin,
+                        SalaryMax = salaryMax,
+                        Currency = currency,
+                        AppliedAt = appliedAt ?? (status != ApplicationStatus.Wishlist ? now : null),
+                        ExcitementRating = excitement,
+                        Priority = priority,
+                        CreatedAt = now,
+                        UpdatedAt = now
+                    };
+                    _dbContext.Applications.Add(newApp);
+
+                    var history = new ApplicationStatusHistory
+                    {
+                        Id = Guid.NewGuid(),
+                        ApplicationId = newApp.Id,
+                        FromStatus = status,
+                        ToStatus = status,
+                        ChangedAt = now,
+                        Note = "Imported from CSV"
+                    };
+                    _dbContext.ApplicationStatusHistories.Add(history);
+                    createdCount++;
+                }
+            }
+            catch (Exception ex)
+            {
+                failedCount++;
+                errors.Add(new CsvImportError(r, "Row", ex.Message));
+            }
+        }
+
+        await _dbContext.SaveChangesAsync(ct);
+        return new CsvImportResultDto(totalProcessed, createdCount, updatedCount, failedCount, errors);
+    }
+
+    private static string EscapeCsv(string value)
+    {
+        if (string.IsNullOrEmpty(value)) return "";
+        if (value.Contains(',') || value.Contains('"') || value.Contains('\n') || value.Contains('\r'))
+        {
+            return $"\"{value.Replace("\"", "\"\"")}\"";
+        }
+        return value;
+    }
+
+    private static List<List<string>> ParseCsv(string text)
+    {
+        var result = new List<List<string>>();
+        if (string.IsNullOrEmpty(text)) return result;
+
+        var currentRow = new List<string>();
+        var currentField = new StringBuilder();
+        bool inQuotes = false;
+        int i = 0;
+
+        while (i < text.Length)
+        {
+            char c = text[i];
+
+            if (inQuotes)
+            {
+                if (c == '"')
+                {
+                    if (i + 1 < text.Length && text[i + 1] == '"')
+                    {
+                        currentField.Append('"');
+                        i++;
+                    }
+                    else
+                    {
+                        inQuotes = false;
+                    }
+                }
+                else
+                {
+                    currentField.Append(c);
+                }
+            }
+            else
+            {
+                if (c == '"')
+                {
+                    inQuotes = true;
+                }
+                else if (c == ',')
+                {
+                    currentRow.Add(currentField.ToString());
+                    currentField.Clear();
+                }
+                else if (c == '\r')
+                {
+                    if (i + 1 < text.Length && text[i + 1] == '\n') i++;
+                    currentRow.Add(currentField.ToString());
+                    currentField.Clear();
+                    result.Add(currentRow);
+                    currentRow = new List<string>();
+                }
+                else if (c == '\n')
+                {
+                    currentRow.Add(currentField.ToString());
+                    currentField.Clear();
+                    result.Add(currentRow);
+                    currentRow = new List<string>();
+                }
+                else
+                {
+                    currentField.Append(c);
+                }
+            }
+            i++;
+        }
+
+        if (currentField.Length > 0 || currentRow.Count > 0)
+        {
+            currentRow.Add(currentField.ToString());
+            result.Add(currentRow);
+        }
+
+        return result;
+    }
 }

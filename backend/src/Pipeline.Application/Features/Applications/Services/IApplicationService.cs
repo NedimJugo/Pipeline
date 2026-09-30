@@ -16,4 +16,6 @@ public interface IApplicationService
     Task DeleteApplicationAsync(Guid id, CancellationToken ct = default);
     Task<ApplicationDetailDto> DuplicateApplicationAsync(Guid id, CancellationToken ct = default);
     Task<IReadOnlyList<ApplicationTimelineItemDto>> GetTimelineAsync(Guid id, CancellationToken ct = default);
+    Task<byte[]> ExportApplicationsCsvAsync(CancellationToken ct = default);
+    Task<Pipeline.Application.Features.Users.DTOs.CsvImportResultDto> ImportApplicationsCsvAsync(System.IO.Stream csvStream, CancellationToken ct = default);
 }

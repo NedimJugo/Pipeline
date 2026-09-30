@@ -121,4 +121,36 @@ public class ApplicationsController : ControllerBase
         var created = await _interviewService.CreateInterviewAsync(request with { ApplicationId = id }, ct);
         return Ok(created);
     }
+
+    [HttpGet("export")]
+    public async Task<IActionResult> ExportCsv(CancellationToken ct)
+    {
+        var bytes = await _applicationService.ExportApplicationsCsvAsync(ct);
+        var filename = $"applications_export_{DateTime.UtcNow:yyyyMMdd_HHmmss}.csv";
+        return File(bytes, "text/csv", filename);
+    }
+
+    [HttpPost("import")]
+    public async Task<IActionResult> ImportCsv([FromForm] Microsoft.AspNetCore.Http.IFormFile? file, CancellationToken ct)
+    {
+        Stream stream;
+        if (file != null && file.Length > 0)
+        {
+            stream = file.OpenReadStream();
+        }
+        else if (Request.Body != null && Request.ContentLength > 0)
+        {
+            stream = Request.Body;
+        }
+        else
+        {
+            return BadRequest("A CSV file or request body is required.");
+        }
+
+        using (stream)
+        {
+            var result = await _applicationService.ImportApplicationsCsvAsync(stream, ct);
+            return Ok(result);
+        }
+    }
 }

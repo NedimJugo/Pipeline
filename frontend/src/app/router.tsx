@@ -18,10 +18,8 @@ import { ReferencesPage } from '@/features/references/ReferencesPage';
 import { OfferComparisonPage } from '@/features/offers/OfferComparisonPage';
 import { AnalyticsPage } from '@/features/analytics/AnalyticsPage';
 import { CalendarPage } from '@/features/calendar/CalendarPage';
-import {
-  DiscoveryPage,
-  SettingsPage,
-} from '@/features/placeholders';
+import { SettingsPage } from '@/features/settings/SettingsPage';
+import { DiscoveryPage } from '@/features/placeholders';
 
 const ProtectedRoute: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
