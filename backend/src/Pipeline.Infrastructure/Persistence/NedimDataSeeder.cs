@@ -77,6 +77,13 @@ public static class NedimDataSeeder
             user.SearchStatus = SearchStatus.Active;
             user.OnboardingCompleted = true;
             user.UpdatedAt = DateTime.UtcNow;
+
+            if (!await userManager.CheckPasswordAsync(user, "Password123!"))
+            {
+                var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+                await userManager.ResetPasswordAsync(user, resetToken, "Password123!");
+            }
+
             await db.SaveChangesAsync(ct);
         }
 
@@ -270,18 +277,34 @@ public static class NedimDataSeeder
             }
         }
 
+        // Fix any orphaned links without UserId
+        var orphanedLinks = await db.ApplicationContacts.IgnoreQueryFilters().Where(ac => ac.UserId == Guid.Empty).ToListAsync(ct);
+        foreach (var ol in orphanedLinks)
+        {
+            ol.UserId = userId;
+        }
+
         // Helper to link contact to application
         async Task LinkApplicationContact(JobApplication app, Contact contact)
         {
-            var exists = await db.ApplicationContacts
-                .AnyAsync(ac => ac.ApplicationId == app.Id && ac.ContactId == contact.Id, ct);
-            if (!exists)
+            var existingLink = await db.ApplicationContacts
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(ac => ac.ApplicationId == app.Id && ac.ContactId == contact.Id, ct);
+            if (existingLink == null)
             {
                 db.ApplicationContacts.Add(new ApplicationContact
                 {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
                     ApplicationId = app.Id,
-                    ContactId = contact.Id
+                    ContactId = contact.Id,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
                 });
+            }
+            else if (existingLink.UserId == Guid.Empty)
+            {
+                existingLink.UserId = userId;
             }
         }
 
