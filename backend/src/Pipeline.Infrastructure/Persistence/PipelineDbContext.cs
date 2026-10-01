@@ -46,6 +46,7 @@ public class PipelineDbContext : IdentityDbContext<User, IdentityRole<Guid>, Gui
     public DbSet<JobSource> JobSources => Set<JobSource>();
     public DbSet<DiscoveredJob> DiscoveredJobs => Set<DiscoveredJob>();
     public DbSet<UserDiscoveredJobState> UserDiscoveredJobStates => Set<UserDiscoveredJobState>();
+    public DbSet<UserIntegrationSetting> UserIntegrationSettings => Set<UserIntegrationSetting>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -142,6 +142,7 @@ builder.Services.AddScoped<Pipeline.Application.Features.Calendar.Services.ICale
 builder.Services.AddScoped<Pipeline.Application.Features.Users.Services.IUserService, UserService>();
 builder.Services.AddScoped<Pipeline.Application.Features.Discovery.Services.IJobSourceConnector, SampleJobConnector>();
 builder.Services.AddScoped<Pipeline.Application.Features.Discovery.Services.IJobDiscoveryService, JobDiscoveryService>();
+builder.Services.AddScoped<Pipeline.Application.Features.Settings.Services.IIntegrationService, IntegrationService>();
 builder.Services.AddHostedService<AutomationBackgroundService>();
 
 // CORS Configuration
