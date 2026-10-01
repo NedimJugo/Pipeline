@@ -59,6 +59,17 @@ export const useSeedDemo = () => {
   });
 };
 
+export const useSeedNedim = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => settingsApi.seedNedimData(),
+    onSuccess: (res) => {
+      queryClient.setQueryData(['user-profile'], res.profile);
+      queryClient.invalidateQueries();
+    },
+  });
+};
+
 export const useDeleteAccount = () => {
   const queryClient = useQueryClient();
   return useMutation({

@@ -13,7 +13,7 @@ import {
   FileText,
 } from 'lucide-react';
 import { settingsApi } from './settings-api';
-import { useImportCsv, useSeedDemo, useDeleteAccount } from './useSettings';
+import { useImportCsv, useSeedDemo, useSeedNedim, useDeleteAccount } from './useSettings';
 import { CsvImportResult } from './types';
 
 export const DataManagementTab: React.FC = () => {
@@ -23,6 +23,7 @@ export const DataManagementTab: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [demoNotice, setDemoNotice] = useState<string | null>(null);
+  const [nedimNotice, setNedimNotice] = useState<string | null>(null);
 
   // CSV Import State
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -31,6 +32,7 @@ export const DataManagementTab: React.FC = () => {
 
   const importMutation = useImportCsv();
   const seedMutation = useSeedDemo();
+  const seedNedimMutation = useSeedNedim();
   const deleteMutation = useDeleteAccount();
 
   const handleExportCsv = async () => {
@@ -61,6 +63,15 @@ export const DataManagementTab: React.FC = () => {
       const res = await seedMutation.mutateAsync();
       setDemoNotice(res.message);
       setTimeout(() => setDemoNotice(null), 5000);
+    }
+  };
+
+  const handleSeedNedim = async () => {
+    if (confirm('Import / Sync Nedim Jugo job search records? This will populate 24 real job applications, 27 contacts, and 62 communication interactions.')) {
+      setNedimNotice(null);
+      const res = await seedNedimMutation.mutateAsync();
+      setNedimNotice(res.message);
+      setTimeout(() => setNedimNotice(null), 6000);
     }
   };
 
@@ -185,6 +196,52 @@ export const DataManagementTab: React.FC = () => {
             </>
           )}
         </button>
+      </div>
+
+      {/* Nedim Jugo Real Career Data Card */}
+      <div className="bg-card border border-primary/30 bg-primary/5 rounded-xl p-6 shadow-xs space-y-4">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-lg bg-primary/20 text-primary">
+            <Sparkles className="h-5 w-5" />
+          </div>
+          <div>
+            <h2 className="text-base font-bold tracking-tight text-foreground">Nedim Jugo — Real Job Search History</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Populate workspace with 24 verified applications, 27 recruiter/referrer contacts, and 62 verbatim interaction records
+            </p>
+          </div>
+        </div>
+
+        {nedimNotice && (
+          <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-lg text-xs font-semibold flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 shrink-0" />
+            <span>{nedimNotice}</span>
+          </div>
+        )}
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <p className="text-xs text-muted-foreground max-w-xl">
+            Loads Nedim's complete real-life application portfolio across 24 companies (Raiffeisen, UniCredit, ITO, Galeyo, HTEC, SaaS Solutions, Softray, ZIRA, Manpower, BH Telecom, Endava, Popcorn Recruiters, Port8, etc.), full verbatim email/LinkedIn/call logs, salary offer, and follow-up tasks.
+          </p>
+          <button
+            type="button"
+            onClick={handleSeedNedim}
+            disabled={seedNedimMutation.isPending}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-bold rounded-lg transition-colors shadow-2xs shrink-0 disabled:opacity-50"
+          >
+            {seedNedimMutation.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Importing Real Career Data...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-4 w-4" />
+                <span>Import / Sync Nedim's Data</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Demo Sandbox Data Card */}

@@ -63,4 +63,9 @@ export const settingsApi = {
     const res = await api.post('/api/me/seed-demo');
     return res.data;
   },
+
+  seedNedimData: async (): Promise<{ message: string; profile: UserSettingsProfile }> => {
+    const res = await api.post('/api/me/seed-nedim');
+    return res.data;
+  },
 };
