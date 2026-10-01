@@ -1,0 +1,10 @@
+**/.git
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/node_modules
+**/dist
+backend/src/Pipeline.Api/Pipeline.db*
+frontend/.vite
+frontend/coverage

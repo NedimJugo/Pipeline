@@ -1,0 +1,18 @@
+{
+  "short_name": "Pipeline",
+  "name": "Pipeline — Job Search Command Center",
+  "description": "Personal CRM and command center for managing applications, interviews, contacts, and offers",
+  "icons": [
+    {
+      "src": "/app_icon.png",
+      "type": "image/png",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#090d16",
+  "theme_color": "#4f46e5",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "scope": "/"
+}

@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: pipeline-career-hub
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_HTTP_PORTS
+        value: 8080
+      - key: Jwt__Secret
+        generateValue: true
+      - key: Jwt__Issuer
+        value: pipeline
+      - key: Jwt__Audience
+        value: pipeline-web
+      - key: AUTO_MIGRATE
+        value: "true"
