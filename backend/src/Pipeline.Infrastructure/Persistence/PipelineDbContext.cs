@@ -58,6 +58,16 @@ public class PipelineDbContext : IdentityDbContext<User, IdentityRole<Guid>, Gui
             b.HasIndex(u => u.CalendarFeedToken).IsUnique();
         });
 
+        // User integration settings configuration
+        builder.Entity<UserIntegrationSetting>(b =>
+        {
+            b.HasIndex(u => u.UserId).IsUnique();
+            b.HasOne(u => u.User)
+                .WithMany()
+                .HasForeignKey(u => u.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
         // Application relations
         builder.Entity<JobApplication>(b =>
         {

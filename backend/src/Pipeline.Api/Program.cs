@@ -211,10 +211,64 @@ if (autoMigrate)
             if (db.Database.IsSqlite())
             {
                 db.Database.EnsureCreated();
+                db.Database.ExecuteSqlRaw(@"
+                    CREATE TABLE IF NOT EXISTS ""UserIntegrationSettings"" (
+                        ""Id"" TEXT NOT NULL PRIMARY KEY,
+                        ""UserId"" TEXT NOT NULL,
+                        ""UseCustomSmtp"" INTEGER NOT NULL DEFAULT 0,
+                        ""SmtpHost"" TEXT NULL,
+                        ""SmtpPort"" INTEGER NULL,
+                        ""SmtpUser"" TEXT NULL,
+                        ""SmtpPassword"" TEXT NULL,
+                        ""SmtpFrom"" TEXT NULL,
+                        ""UseCustomGoogle"" INTEGER NOT NULL DEFAULT 0,
+                        ""GoogleClientId"" TEXT NULL,
+                        ""GoogleClientSecret"" TEXT NULL,
+                        ""StorageProvider"" TEXT NULL,
+                        ""CreatedAt"" TEXT NOT NULL,
+                        ""UpdatedAt"" TEXT NULL,
+                        CONSTRAINT ""FK_UserIntegrationSettings_AspNetUsers_UserId"" FOREIGN KEY (""UserId"") REFERENCES ""AspNetUsers"" (""Id"") ON DELETE CASCADE
+                    );
+                    CREATE UNIQUE INDEX IF NOT EXISTS ""IX_UserIntegrationSettings_UserId"" ON ""UserIntegrationSettings"" (""UserId"");
+                ");
             }
             else
             {
-                db.Database.Migrate();
+                try
+                {
+                    db.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning(ex, "Database.Migrate() encountered an issue; checking table creation fallback.");
+                }
+
+                try
+                {
+                    db.Database.ExecuteSqlRaw(@"
+                        CREATE TABLE IF NOT EXISTS ""UserIntegrationSettings"" (
+                            ""Id"" uuid NOT NULL PRIMARY KEY,
+                            ""UserId"" uuid NOT NULL REFERENCES ""AspNetUsers""(""Id"") ON DELETE CASCADE,
+                            ""UseCustomSmtp"" boolean NOT NULL DEFAULT FALSE,
+                            ""SmtpHost"" text NULL,
+                            ""SmtpPort"" integer NULL,
+                            ""SmtpUser"" text NULL,
+                            ""SmtpPassword"" text NULL,
+                            ""SmtpFrom"" text NULL,
+                            ""UseCustomGoogle"" boolean NOT NULL DEFAULT FALSE,
+                            ""GoogleClientId"" text NULL,
+                            ""GoogleClientSecret"" text NULL,
+                            ""StorageProvider"" text NULL,
+                            ""CreatedAt"" timestamp with time zone NOT NULL,
+                            ""UpdatedAt"" timestamp with time zone NULL
+                        );
+                        CREATE UNIQUE INDEX IF NOT EXISTS ""IX_UserIntegrationSettings_UserId"" ON ""UserIntegrationSettings"" (""UserId"");
+                    ");
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning(ex, "Failed to ensure UserIntegrationSettings table exists.");
+                }
             }
         }
         catch (Exception ex)
