@@ -36,8 +36,10 @@ ENV ASPNETCORE_HTTP_PORTS=8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-RUN mkdir -p /app/data && chown -R appuser:appgroup /app/data
+COPY --from=backend-build /app/publish .
+RUN mkdir -p /app/App_Data/uploads && \
+    mkdir -p /app/data && \
+    chown -R appuser:appgroup /app/App_Data /app/data
 USER appuser
 
-COPY --from=backend-build /app/publish .
 ENTRYPOINT ["dotnet", "Pipeline.Api.dll"]
