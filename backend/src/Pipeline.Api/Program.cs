@@ -275,6 +275,17 @@ if (autoMigrate)
         {
             Log.Error(ex, "Failed to apply database migrations on startup.");
         }
+
+        try
+        {
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+            await NedimDataSeeder.SeedAsync(db, userManager);
+            Log.Information("Nedim Jugo career records seeded / verified successfully.");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to seed Nedim Jugo career records on startup.");
+        }
     }
 }
 

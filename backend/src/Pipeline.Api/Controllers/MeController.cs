@@ -80,4 +80,12 @@ public class MeController : ControllerBase
         var profile = await _userService.GetProfileAsync(ct);
         return Ok(new { message = "Demo data seeded successfully.", profile });
     }
+
+    [HttpPost("seed-nedim")]
+    public async Task<IActionResult> SeedNedimData(CancellationToken ct)
+    {
+        await _userService.SeedNedimDataAsync(ct);
+        var profile = await _userService.GetProfileAsync(ct);
+        return Ok(new { message = "Nedim's job application history (24 applications, 27 contacts, 62 interactions) seeded successfully.", profile });
+    }
 }

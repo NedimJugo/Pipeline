@@ -478,4 +478,10 @@ public class UserService : IUserService
         NotificationPrefs: u.NotificationPrefs,
         CreatedAt: u.CreatedAt
     );
+
+    public async Task SeedNedimDataAsync(CancellationToken ct = default)
+    {
+        var user = await GetCurrentUserAsync(ct);
+        await NedimDataSeeder.SeedAsync(_dbContext, _userManager, user.Id, ct);
+    }
 }
