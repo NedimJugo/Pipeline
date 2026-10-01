@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sun, Moon, Search, LogOut } from 'lucide-react';
+import { Sun, Moon, Search, LogOut, HelpCircle } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 import { useTheme } from '@/lib/theme';
 
@@ -31,7 +31,18 @@ export const Header: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new CustomEvent('pipeline_open_app_tour'))}
+          className="p-2 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center gap-1.5 text-xs font-medium"
+          title="Take App Tour"
+          aria-label="Take App Tour"
+        >
+          <HelpCircle className="h-4 w-4 text-indigo-500" />
+          <span className="hidden md:inline">Tour</span>
+        </button>
+
         <button
           type="button"
           onClick={toggleTheme}
