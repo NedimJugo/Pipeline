@@ -60,9 +60,9 @@ public class NedimDataSeederTests
         Assert.Equal("BAM", user.Currency);
         Assert.True(user.OnboardingCompleted);
 
-        // Assert 24 Applications
+        // Assert 25 Applications
         var apps = await _dbContext.Applications.IgnoreQueryFilters().Where(a => a.UserId == user.Id).ToListAsync();
-        Assert.Equal(24, apps.Count);
+        Assert.Equal(25, apps.Count);
 
         // Assert exact Stage Breakdown
         var ghostedCount = apps.Count(a => a.Status == ApplicationStatus.Ghosted);
@@ -71,7 +71,7 @@ public class NedimDataSeederTests
         var withdrawnCount = apps.Count(a => a.Status == ApplicationStatus.Withdrawn);
 
         Assert.Equal(9, ghostedCount);
-        Assert.Equal(11, rejectedCount);
+        Assert.Equal(12, rejectedCount);
         Assert.Equal(3, appliedCount);
         Assert.Equal(1, withdrawnCount);
 
@@ -84,9 +84,9 @@ public class NedimDataSeederTests
         var contacts = await _dbContext.Contacts.IgnoreQueryFilters().Where(c => c.UserId == user.Id).ToListAsync();
         Assert.True(contacts.Count >= 27, $"Expected at least 27 contacts, got {contacts.Count}");
 
-        // Assert Interactions == 62
+        // Assert Interactions == 69
         var interactions = await _dbContext.Interactions.IgnoreQueryFilters().Where(i => i.UserId == user.Id).ToListAsync();
-        Assert.Equal(62, interactions.Count);
+        Assert.Equal(69, interactions.Count);
 
         // Assert MoP Screening Interview
         var interview = await _dbContext.Interviews.IgnoreQueryFilters().FirstOrDefaultAsync(i => i.UserId == user.Id);
@@ -101,7 +101,7 @@ public class NedimDataSeederTests
         await NedimDataSeeder.SeedAsync(_dbContext, _userManagerMock.Object, targetUserId: user.Id);
         var appsAfter = await _dbContext.Applications.IgnoreQueryFilters().Where(a => a.UserId == user.Id).ToListAsync();
         var interactionsAfter = await _dbContext.Interactions.IgnoreQueryFilters().Where(i => i.UserId == user.Id).ToListAsync();
-        Assert.Equal(24, appsAfter.Count);
-        Assert.Equal(62, interactionsAfter.Count);
+        Assert.Equal(25, appsAfter.Count);
+        Assert.Equal(69, interactionsAfter.Count);
     }
 }

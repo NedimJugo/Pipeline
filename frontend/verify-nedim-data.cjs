@@ -31,7 +31,7 @@ async function run() {
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1500);
 
-    // Switch to Table View to see all 24 applications in full clarity
+    // Switch to Table View to see all 25 applications in full clarity
     console.log('Switching to Table view...');
     const tableBtn = page.locator('button[aria-label="Table view"]');
     if (await tableBtn.isVisible()) {
@@ -42,12 +42,14 @@ async function run() {
     await page.waitForTimeout(1000);
 
     // Verify companies in table
-    await page.waitForSelector('text=Ministry of Programming (MoP)');
+    await page.waitForSelector('text=Ministry of Programming');
     await page.waitForSelector('text=ZIRA Group');
-    await page.waitForSelector('text=UniCredit Bank (BiH)');
+    await page.waitForSelector('text=UniCredit Bank d.d.');
     await page.waitForSelector('text=SaaS Solutions');
-    await page.waitForSelector('text=Port8 d.o.o. (Mostar)');
-    console.log('✓ Verified 24 applications present in Table view.');
+    await page.waitForSelector('text=Port8 (emonitor AG)');
+    await page.waitForSelector('text=Raiffeisen Group');
+    await page.waitForSelector('text=BH Telecom d.d. Sarajevo');
+    console.log('✓ Verified applications present in Table view.');
 
     const tableScreenshotPath = path.join(artifactsDir, 'nedim_applications_table_verified.png');
     await page.screenshot({ path: tableScreenshotPath, fullPage: true });
@@ -55,7 +57,7 @@ async function run() {
 
     // 3. Open Ministry of Programming application detail page
     console.log('3. Opening Ministry of Programming application details...');
-    await page.click('text=Ministry of Programming (MoP)');
+    await page.click('text=Ministry of Programming');
     await page.waitForURL(/\/applications\/[0-9a-fA-F-]+/, { timeout: 10000 });
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1000);
@@ -77,8 +79,8 @@ async function run() {
     await contactsTab.click();
     await page.waitForTimeout(1500);
 
-    await page.waitForSelector('text=Resad Zacina');
-    await page.waitForSelector('text=Hajra Saletovic');
+    await page.waitForSelector('text=Rešad Začina');
+    await page.waitForSelector('text=Hajra Saletović');
     console.log('✓ Verified linked recruiter/referrer contacts rendered.');
 
     // Switch back to Timeline to capture full screenshot
@@ -98,13 +100,15 @@ async function run() {
     await page.waitForSelector('text=Damir Avdić');
     await page.waitForSelector('text=Mateja Šumić');
     await page.waitForSelector('text=Edin Salihagić');
-    console.log('✓ Verified 27 recruiter/referrer contacts loaded.');
+    await page.waitForSelector('text=Sanja Zovko');
+    await page.waitForSelector('text=Armin Babović');
+    console.log('✓ Verified recruiter/referrer contacts loaded.');
 
     const contactsScreenshotPath = path.join(artifactsDir, 'nedim_contacts_verified.png');
     await page.screenshot({ path: contactsScreenshotPath, fullPage: true });
     console.log(`✓ Saved contacts directory screenshot: ${contactsScreenshotPath}`);
 
-    // 5. Navigate to Settings -> Data Management to verify the new Career Data card
+    // 5. Navigate to Settings -> Data Management to verify the Career Data card
     console.log('5. Navigating to Settings -> Data Management...');
     await page.goto('http://localhost:5173/settings');
     await page.waitForLoadState('networkidle');
