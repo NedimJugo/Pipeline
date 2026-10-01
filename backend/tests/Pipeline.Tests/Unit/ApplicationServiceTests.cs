@@ -134,4 +134,66 @@ public class ApplicationServiceTests
         duplicate.CompanyName.Should().Be("Stripe");
         duplicate.JobDescription.Should().Be("Lead backend infrastructure");
     }
+
+    [Fact]
+    public async Task CreateApplication_WithFutureAppliedAt_ThrowsArgumentException()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var currentUserServiceMock = new Mock<ICurrentUserService>();
+        currentUserServiceMock.Setup(s => s.UserId).Returns(userId);
+        currentUserServiceMock.Setup(s => s.IsAuthenticated).Returns(true);
+
+        var options = new DbContextOptionsBuilder<PipelineDbContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        var dbContext = new PipelineDbContext(options, currentUserServiceMock.Object);
+        var companyService = new CompanyService(dbContext, currentUserServiceMock.Object);
+        var applicationService = new ApplicationService(dbContext, currentUserServiceMock.Object, companyService);
+
+        var futureDate = DateTime.UtcNow.AddDays(7);
+        var request = new CreateApplicationRequest(
+            RoleTitle: "Lead Engineer",
+            CompanyName: "FutureTech",
+            Status: ApplicationStatus.Applied,
+            AppliedAt: futureDate);
+
+        // Act & Assert
+        var act = async () => await applicationService.CreateApplicationAsync(request);
+        await act.Should().ThrowAsync<ArgumentException>()
+            .WithMessage("*Application date cannot be in the future*");
+    }
+
+    [Fact]
+    public async Task CreateApplication_WithHistoricalPastAppliedAt_SucceedsAndPersistsDate()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var currentUserServiceMock = new Mock<ICurrentUserService>();
+        currentUserServiceMock.Setup(s => s.UserId).Returns(userId);
+        currentUserServiceMock.Setup(s => s.IsAuthenticated).Returns(true);
+
+        var options = new DbContextOptionsBuilder<PipelineDbContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        var dbContext = new PipelineDbContext(options, currentUserServiceMock.Object);
+        var companyService = new CompanyService(dbContext, currentUserServiceMock.Object);
+        var applicationService = new ApplicationService(dbContext, currentUserServiceMock.Object, companyService);
+
+        var pastDate = DateTime.UtcNow.AddMonths(-3);
+        var request = new CreateApplicationRequest(
+            RoleTitle: "Staff Engineer",
+            CompanyName: "PastCorp",
+            Status: ApplicationStatus.Applied,
+            AppliedAt: pastDate);
+
+        // Act
+        var created = await applicationService.CreateApplicationAsync(request);
+
+        // Assert
+        created.Should().NotBeNull();
+        created.AppliedAt.Should().BeCloseTo(pastDate, TimeSpan.FromSeconds(1));
+    }
 }

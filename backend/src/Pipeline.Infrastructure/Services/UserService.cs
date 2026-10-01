@@ -50,8 +50,18 @@ public class UserService : IUserService
         if (!string.IsNullOrWhiteSpace(request.Currency)) user.Currency = request.Currency;
         user.SearchStatus = request.SearchStatus;
         if (!string.IsNullOrWhiteSpace(request.Timezone)) user.Timezone = request.Timezone;
+        if (request.OnboardingCompleted.HasValue) user.OnboardingCompleted = request.OnboardingCompleted.Value;
         user.UpdatedAt = DateTime.UtcNow;
 
+        await _dbContext.SaveChangesAsync(ct);
+        return MapToDto(user);
+    }
+
+    public async Task<UserSettingsProfileDto> CompleteOnboardingAsync(CancellationToken ct = default)
+    {
+        var user = await GetCurrentUserAsync(ct);
+        user.OnboardingCompleted = true;
+        user.UpdatedAt = DateTime.UtcNow;
         await _dbContext.SaveChangesAsync(ct);
         return MapToDto(user);
     }

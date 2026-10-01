@@ -36,6 +36,13 @@ public class MeController : ControllerBase
         return Ok(updated);
     }
 
+    [HttpPost("complete-onboarding")]
+    public async Task<IActionResult> CompleteOnboarding(CancellationToken ct)
+    {
+        var updated = await _userService.CompleteOnboardingAsync(ct);
+        return Ok(updated);
+    }
+
     [HttpPut("preferences")]
     public async Task<IActionResult> UpdatePreferences([FromBody] UpdatePreferencesRequest request, CancellationToken ct)
     {

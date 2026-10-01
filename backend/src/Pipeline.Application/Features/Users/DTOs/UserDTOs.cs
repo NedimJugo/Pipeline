@@ -30,7 +30,8 @@ public record UpdateProfileRequest(
     decimal? SalaryExpectationMax = null,
     string Currency = "USD",
     SearchStatus SearchStatus = SearchStatus.Active,
-    string Timezone = "UTC");
+    string Timezone = "UTC",
+    bool? OnboardingCompleted = null);
 
 public record UpdatePreferencesRequest(
     int? StaleAfterDays = null,

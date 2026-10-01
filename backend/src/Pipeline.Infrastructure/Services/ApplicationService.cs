@@ -150,6 +150,11 @@ public class ApplicationService : IApplicationService
             throw new ArgumentException("Either CompanyId or CompanyName must be provided.");
         }
 
+        if (request.AppliedAt.HasValue && request.AppliedAt.Value > DateTime.UtcNow.AddDays(1))
+        {
+            throw new ArgumentException("Application date cannot be in the future.");
+        }
+
         var now = DateTime.UtcNow;
         var application = new JobApplication
         {
@@ -221,6 +226,11 @@ public class ApplicationService : IApplicationService
         {
             var comp = await _companyService.GetOrCreateCompanyAsync(request.CompanyName, null, ct);
             app.CompanyId = comp.Id;
+        }
+
+        if (request.AppliedAt.HasValue && request.AppliedAt.Value > DateTime.UtcNow.AddDays(1))
+        {
+            throw new ArgumentException("Application date cannot be in the future.");
         }
 
         app.RoleTitle = request.RoleTitle.Trim();

@@ -12,4 +12,5 @@ public interface IUserService
     Task<GdprExportDto> ExportGdprDataAsync(CancellationToken ct = default);
     Task DeleteAccountAsync(CancellationToken ct = default);
     Task SeedDemoDataAsync(CancellationToken ct = default);
+    Task<UserSettingsProfileDto> CompleteOnboardingAsync(CancellationToken ct = default);
 }
