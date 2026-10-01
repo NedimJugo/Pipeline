@@ -1,9 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { JobDescriptionHighlighter } from '@/features/applications/components/JobDescriptionHighlighter';
 import { StatusStepper } from '@/features/applications/components/StatusStepper';
 import { TerminalStatusModal } from '@/features/applications/components/TerminalStatusModal';
+import { CreateApplicationModal } from '@/features/applications/components/CreateApplicationModal';
 
 describe('JobDescriptionHighlighter', () => {
   it('renders empty state when no job description is provided', () => {
@@ -71,5 +73,29 @@ describe('TerminalStatusModal', () => {
       );
       expect(onClose).toHaveBeenCalled();
     });
+  });
+});
+
+describe('CreateApplicationModal Date Validation', () => {
+  it('renders application date input with max set to today and allows past dates', () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <CreateApplicationModal isOpen={true} onClose={vi.fn()} />
+      </QueryClientProvider>
+    );
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const dateInput = screen.getByLabelText(/Application Date/i) as HTMLInputElement;
+    expect(dateInput).toBeInTheDocument();
+    expect(dateInput.value).toBe(todayStr);
+    expect(dateInput.max).toBe(todayStr);
+
+    // Can change to a previous past date
+    fireEvent.change(dateInput, { target: { value: '2026-01-15' } });
+    expect(dateInput.value).toBe('2026-01-15');
   });
 });

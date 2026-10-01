@@ -7,7 +7,7 @@ import {
   CreateApplicationPayload,
 } from '../types';
 import { useUpdateApplication } from '../useApplications';
-import { X, Building2, Briefcase, DollarSign, Star, Link as LinkIcon, ThumbsUp, ThumbsDown, FileText } from 'lucide-react';
+import { X, Building2, Briefcase, DollarSign, Star, Link as LinkIcon, ThumbsUp, ThumbsDown, FileText, Calendar } from 'lucide-react';
 
 interface EditApplicationModalProps {
   isOpen: boolean;
@@ -20,9 +20,14 @@ export const EditApplicationModal: React.FC<EditApplicationModalProps> = ({
   onClose,
   application,
 }) => {
+  const todayStr = new Date().toISOString().split('T')[0];
   const [roleTitle, setRoleTitle] = useState(application.roleTitle);
   const [companyName, setCompanyName] = useState(application.companyName);
   const [jobUrl, setJobUrl] = useState(application.jobUrl || '');
+  const [appliedAt, setAppliedAt] = useState<string>(
+    application.appliedAt ? application.appliedAt.split('T')[0] : ''
+  );
+  const [dateError, setDateError] = useState<string | null>(null);
   const [workMode, setWorkMode] = useState<WorkMode>(application.workMode);
   const [employmentType, setEmploymentType] = useState<EmploymentType>(application.employmentType);
   const [source, setSource] = useState<ApplicationSource>(application.source);
@@ -61,6 +66,8 @@ export const EditApplicationModal: React.FC<EditApplicationModalProps> = ({
     setNotes(application.notes || '');
     setPros(application.pros || '');
     setCons(application.cons || '');
+    setAppliedAt(application.appliedAt ? application.appliedAt.split('T')[0] : '');
+    setDateError(null);
   }, [application]);
 
   const updateMutation = useUpdateApplication();
@@ -71,10 +78,16 @@ export const EditApplicationModal: React.FC<EditApplicationModalProps> = ({
     e.preventDefault();
     if (!roleTitle.trim() || !companyName.trim()) return;
 
+    if (appliedAt && appliedAt > todayStr) {
+      setDateError('Application date cannot be in the future.');
+      return;
+    }
+
     const payload: Partial<CreateApplicationPayload> = {
       roleTitle: roleTitle.trim(),
       companyName: companyName.trim(),
       jobUrl: jobUrl.trim() || null,
+      appliedAt: appliedAt ? new Date(appliedAt).toISOString() : null,
       workMode,
       employmentType,
       source,
@@ -146,7 +159,34 @@ export const EditApplicationModal: React.FC<EditApplicationModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+              <label htmlFor="edit-app-date" className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
+                Application Date
+              </label>
+              <div className="relative">
+                <Calendar className="h-4 w-4 absolute left-3 top-2.5 text-muted-foreground pointer-events-none" />
+                <input
+                  id="edit-app-date"
+                  type="date"
+                  max={todayStr}
+                  value={appliedAt}
+                  onChange={(e) => {
+                    setAppliedAt(e.target.value);
+                    if (e.target.value > todayStr) {
+                      setDateError('Application date cannot be in the future.');
+                    } else {
+                      setDateError(null);
+                    }
+                  }}
+                  className={`w-full pl-9 pr-3 py-1.5 text-xs bg-background border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                    dateError ? 'border-destructive' : 'border-border'
+                  }`}
+                />
+              </div>
+              {dateError && <p className="text-[10px] text-destructive mt-1">{dateError}</p>}
+            </div>
+
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
                 Work Mode
