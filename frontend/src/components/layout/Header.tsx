@@ -1,9 +1,13 @@
 import React from 'react';
-import { Sun, Moon, Search, LogOut, HelpCircle } from 'lucide-react';
+import { Sun, Moon, Search, LogOut, HelpCircle, Menu } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 import { useTheme } from '@/lib/theme';
 
-export const Header: React.FC = () => {
+export interface HeaderProps {
+  onToggleMobileMenu?: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onToggleMobileMenu }) => {
   const { user, logout } = useAuth();
   const { theme, setTheme } = useTheme();
 
@@ -16,22 +20,34 @@ export const Header: React.FC = () => {
     : user?.email ? user.email.slice(0, 2).toUpperCase() : 'U';
 
   return (
-    <header className="h-16 border-b border-border/80 bg-card/40 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-30">
-      <div className="flex items-center gap-3">
+    <header className="h-16 border-b border-border/80 bg-card/40 backdrop-blur-md px-3 sm:px-6 flex items-center justify-between sticky top-0 z-30">
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Mobile Hamburger Menu Toggle */}
         <button
           type="button"
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-background/50 hover:bg-muted text-muted-foreground hover:text-foreground text-xs transition-colors"
+          onClick={onToggleMobileMenu}
+          className="md:hidden p-2 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          aria-label="Toggle navigation menu"
+          title="Toggle navigation menu"
+        >
+          <Menu className="h-4 w-4" />
+        </button>
+
+        <button
+          type="button"
+          className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg border border-border bg-background/50 hover:bg-muted text-muted-foreground hover:text-foreground text-xs transition-colors"
           onClick={() => window.dispatchEvent(new CustomEvent('pipeline_open_command_palette'))}
         >
           <Search className="h-3.5 w-3.5" />
-          <span>Quick search applications, contacts...</span>
-          <kbd className="ml-2 font-mono text-[10px] bg-muted px-1.5 py-0.5 rounded border border-border">
+          <span className="hidden sm:inline">Quick search applications, contacts...</span>
+          <span className="sm:hidden">Search...</span>
+          <kbd className="ml-2 hidden sm:inline-block font-mono text-[10px] bg-muted px-1.5 py-0.5 rounded border border-border">
             Ctrl+K
           </kbd>
         </button>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <button
           type="button"
           onClick={() => window.dispatchEvent(new CustomEvent('pipeline_open_app_tour'))}
@@ -53,7 +69,7 @@ export const Header: React.FC = () => {
           {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
 
-        <div className="flex items-center gap-3 pl-2 border-l border-border">
+        <div className="flex items-center gap-2 sm:gap-3 pl-2 border-l border-border">
           <div className="h-8 w-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-semibold text-xs border border-primary/30">
             {initials}
           </div>

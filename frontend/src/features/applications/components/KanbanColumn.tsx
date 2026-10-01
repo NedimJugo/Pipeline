@@ -26,7 +26,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
     <div
       ref={setNodeRef}
       className={clsx(
-        'w-72 shrink-0 flex flex-col rounded-xl border border-border/80 bg-muted/30 transition-colors max-h-[calc(100vh-210px)]',
+        'w-72 shrink-0 snap-start flex flex-col rounded-xl border border-border/80 bg-muted/30 transition-colors max-h-[calc(100vh-210px)]',
         isOver && 'ring-2 ring-primary/60 bg-primary/5'
       )}
     >

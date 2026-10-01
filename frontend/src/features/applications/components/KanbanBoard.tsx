@@ -76,7 +76,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ applications }) => {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex gap-4 overflow-x-auto pb-4 pt-1 items-start min-h-[calc(100vh-210px)] select-none">
+      <div className="flex gap-4 overflow-x-auto pb-4 pt-1 items-start min-h-[calc(100vh-210px)] select-none snap-x snap-mandatory scroll-smooth touch-pan-x">
         {activeColumns.map((col) => {
           const colApps = applications.filter((a) => a.status === col.status);
           return (

@@ -11,6 +11,7 @@ import { AppTourModal } from '@/features/onboarding/AppTourModal';
 export const AppLayout: React.FC = () => {
   const { user, updateUser } = useAuth();
   const [isTourOpen, setIsTourOpen] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   useEffect(() => {
     const handleOpenTour = () => setIsTourOpen(true);
@@ -20,11 +21,14 @@ export const AppLayout: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
-      <Sidebar />
+      <Sidebar
+        isMobileOpen={isMobileNavOpen}
+        onMobileClose={() => setIsMobileNavOpen(false)}
+      />
       <div className="flex-1 flex flex-col min-w-0">
         <OfflineBanner />
-        <Header />
-        <main className="flex-1 p-6 overflow-y-auto">
+        <Header onToggleMobileMenu={() => setIsMobileNavOpen((prev) => !prev)} />
+        <main className="flex-1 p-4 sm:p-6 overflow-y-auto">
           <Outlet />
         </main>
       </div>

@@ -23,7 +23,7 @@ export const ClosedLane: React.FC<ClosedLaneProps> = ({ applications }) => {
     <div
       ref={setNodeRef}
       className={clsx(
-        'shrink-0 flex flex-col rounded-xl border border-border/80 bg-muted/20 transition-all max-h-[calc(100vh-210px)]',
+        'shrink-0 snap-start flex flex-col rounded-xl border border-border/80 bg-muted/20 transition-all max-h-[calc(100vh-210px)]',
         isExpanded ? 'w-72' : 'w-12',
         isOver && 'ring-2 ring-destructive/60 bg-destructive/5'
       )}
