@@ -48,3 +48,40 @@ export interface CsvImportResult {
   failedCount: number;
   errors: CsvImportError[];
 }
+
+export interface IntegrationSettings {
+  useCustomSmtp: boolean;
+  smtpHost: string | null;
+  smtpPort: number;
+  smtpUser: string | null;
+  hasSmtpPassword: boolean;
+  smtpFrom: string | null;
+  isEnvFallbackSmtp: boolean;
+  useCustomGoogle: boolean;
+  googleClientId: string | null;
+  hasGoogleClientSecret: boolean;
+  storageProvider: string;
+}
+
+export interface UpdateIntegrationSettingsRequest {
+  useCustomSmtp?: boolean;
+  smtpHost?: string | null;
+  smtpPort?: number | null;
+  smtpUser?: string | null;
+  smtpPassword?: string | null;
+  smtpFrom?: string | null;
+  useCustomGoogle?: boolean;
+  googleClientId?: string | null;
+  googleClientSecret?: string | null;
+  storageProvider?: string | null;
+}
+
+export interface TestEmailRequest {
+  targetEmail: string;
+}
+
+export interface TestEmailResult {
+  success: boolean;
+  message: string;
+}
+

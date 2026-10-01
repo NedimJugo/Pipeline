@@ -6,14 +6,16 @@ import {
   Palette,
   Loader2,
   AlertCircle,
+  Plug,
 } from 'lucide-react';
 import { useProfile } from './useSettings';
 import { ProfileSettingsTab } from './ProfileSettingsTab';
 import { PipelineSettingsTab } from './PipelineSettingsTab';
+import { IntegrationsTab } from './IntegrationsTab';
 import { DataManagementTab } from './DataManagementTab';
 import { AppearanceTab } from './AppearanceTab';
 
-type SettingsTab = 'profile' | 'pipeline' | 'data' | 'appearance';
+type SettingsTab = 'profile' | 'pipeline' | 'integrations' | 'data' | 'appearance';
 
 export const SettingsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
@@ -43,9 +45,9 @@ export const SettingsPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-6 pb-12">
       {/* Header */}
       <div className="pb-4 border-b border-border">
-        <h1 className="text-2xl font-bold tracking-tight">Account Settings & Data Management</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Account Settings & Integrations</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Manage your career identity, pipeline rules, CSV import/export, and GDPR data portability
+          Manage your career identity, pipeline rules, SMTP email, Google Calendar sync, and data portability
         </p>
       </div>
 
@@ -73,6 +75,18 @@ export const SettingsPage: React.FC = () => {
         >
           <Sliders className="h-4 w-4" />
           <span>Pipeline Rules</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('integrations')}
+          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors whitespace-nowrap ${
+            activeTab === 'integrations'
+              ? 'border-primary text-primary font-bold'
+              : 'border-transparent text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          <Plug className="h-4 w-4" />
+          <span>Integrations & Services</span>
         </button>
 
         <button
@@ -104,6 +118,7 @@ export const SettingsPage: React.FC = () => {
       <div>
         {activeTab === 'profile' && <ProfileSettingsTab profile={profile} />}
         {activeTab === 'pipeline' && <PipelineSettingsTab profile={profile} />}
+        {activeTab === 'integrations' && <IntegrationsTab />}
         {activeTab === 'data' && <DataManagementTab />}
         {activeTab === 'appearance' && <AppearanceTab />}
       </div>
