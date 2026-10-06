@@ -60,9 +60,9 @@ public class NedimDataSeederTests
         Assert.Equal("BAM", user.Currency);
         Assert.True(user.OnboardingCompleted);
 
-        // Assert 25 Applications
+        // Assert 28 Applications
         var apps = await _dbContext.Applications.IgnoreQueryFilters().Where(a => a.UserId == user.Id).ToListAsync();
-        Assert.Equal(25, apps.Count);
+        Assert.Equal(28, apps.Count);
 
         // Assert exact Stage Breakdown
         var ghostedCount = apps.Count(a => a.Status == ApplicationStatus.Ghosted);
@@ -72,7 +72,7 @@ public class NedimDataSeederTests
 
         Assert.Equal(9, ghostedCount);
         Assert.Equal(12, rejectedCount);
-        Assert.Equal(3, appliedCount);
+        Assert.Equal(6, appliedCount);
         Assert.Equal(1, withdrawnCount);
 
         // Assert UniCredit offer
@@ -80,13 +80,18 @@ public class NedimDataSeederTests
         Assert.Equal(1450, unicreditApp.OfferSalary);
         Assert.NotNull(unicreditApp.OfferNegotiationNotes);
 
-        // Assert Contacts >= 27
-        var contacts = await _dbContext.Contacts.IgnoreQueryFilters().Where(c => c.UserId == user.Id).ToListAsync();
-        Assert.True(contacts.Count >= 27, $"Expected at least 27 contacts, got {contacts.Count}");
+        // Assert new Oct 6 applications exist
+        Assert.Contains(apps, a => a.RoleTitle == ".NET Developer");
+        Assert.Contains(apps, a => a.RoleTitle == "Full Stack / .NET Core Developer");
+        Assert.Contains(apps, a => a.RoleTitle == "Software Engineer (Data & Analytics)");
 
-        // Assert Interactions == 69
+        // Assert Contacts >= 30
+        var contacts = await _dbContext.Contacts.IgnoreQueryFilters().Where(c => c.UserId == user.Id).ToListAsync();
+        Assert.True(contacts.Count >= 30, $"Expected at least 30 contacts, got {contacts.Count}");
+
+        // Assert Interactions == 72
         var interactions = await _dbContext.Interactions.IgnoreQueryFilters().Where(i => i.UserId == user.Id).ToListAsync();
-        Assert.Equal(69, interactions.Count);
+        Assert.Equal(72, interactions.Count);
 
         // Assert MoP Screening Interview
         var interview = await _dbContext.Interviews.IgnoreQueryFilters().FirstOrDefaultAsync(i => i.UserId == user.Id);
@@ -95,13 +100,13 @@ public class NedimDataSeederTests
 
         // Assert Tasks
         var tasks = await _dbContext.Tasks.IgnoreQueryFilters().Where(t => t.UserId == user.Id).ToListAsync();
-        Assert.True(tasks.Count >= 4);
+        Assert.True(tasks.Count >= 7);
 
         // Assert Idempotency: Running seeder again does not duplicate applications or interactions
         await NedimDataSeeder.SeedAsync(_dbContext, _userManagerMock.Object, targetUserId: user.Id);
         var appsAfter = await _dbContext.Applications.IgnoreQueryFilters().Where(a => a.UserId == user.Id).ToListAsync();
         var interactionsAfter = await _dbContext.Interactions.IgnoreQueryFilters().Where(i => i.UserId == user.Id).ToListAsync();
-        Assert.Equal(25, appsAfter.Count);
-        Assert.Equal(69, interactionsAfter.Count);
+        Assert.Equal(28, appsAfter.Count);
+        Assert.Equal(72, interactionsAfter.Count);
     }
 }

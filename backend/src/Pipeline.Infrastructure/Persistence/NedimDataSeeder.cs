@@ -1607,8 +1607,232 @@ Hvala Vam unaprijed na vremenu i pomoći, zaista bih bio zahvalan na komunikacij
             "Pisao Mariji i Ivanu prije 30 dana i oboje rekli da nema pozicija");
 
         // ==========================================
+        // 26. ENTERWELL (Applied)
+        // ==========================================
+        var compEnterwell = await GetOrCreateCompany("Enterwell", "https://enterwell.net", "Mostar, BiH", "Software Development");
+        var contEnterwell = CreateContact("Enterwell Careers Team", compEnterwell.Id, "Careers / Talent Acquisition", "careers@enterwell.net", null, null, ContactType.Recruiter);
+        var appEnterwell = CreateApplication(
+            compEnterwell,
+            ".NET Developer",
+            ApplicationStatus.Applied,
+            new DateTime(2026, 10, 6, 15, 31, 0, DateTimeKind.Utc),
+            ApplicationSource.Other,
+            "Email prijava (careers@enterwell.net)",
+            WorkMode.Onsite,
+            "Prijava za .NET Developer poziciju poslata putem emaila na careers@enterwell.net. Priloženi CV i motivaciono pismo.",
+            null);
+        LinkApplicationContact(appEnterwell, contEnterwell);
+
+        AddInteraction(appEnterwell, contEnterwell, InteractionDirection.Outbound, InteractionChannel.Email,
+            new DateTime(2026, 10, 6, 15, 31, 0, DateTimeKind.Utc),
+            "NET developer at Enterwell",
+@"Nedim <nedim.jugoo@gmail.com>
+to: careers@enterwell.net
+date: Oct 6, 2026, 3:31 PM
+subject: NET developer at Enterwell
+mailed-by: gmail.com
+
+Nedim <nedim.jugoo@gmail.com>
+3:31 PM (10 minutes ago)
+to careers
+
+Dear Enterwell Team,
+I am applying for the .NET Developer position. My motivation letter and CV are attached.
+
+Contact information
+Nedim Jugo
+Mostar, Bosnia and Herzegovina
+0603185869
+nedim.jugoo@gmail.com
+
+About me
+I hold a bachelor's degree in Software Engineering from ""Džemal Bijedić"" University in Mostar. During my studies I focused on building complete, real-world applications rather than only academic exercises, and over the past year I have delivered several large projects.
+My main technology is ASP.NET Core, which I use for backend development and APIs. I have used it in a Smart City application (Angular, ASP.NET Core) and in EcoChallenge (Flutter, ASP.NET Core), where I also integrated online payments with Stripe. I have worked with relational databases in all of my projects, and I have deployed applications on Microsoft Azure using Docker containers. On the AI side, I built Binny, an autonomous waste recognition and sorting system (YOLOv8, FastAPI), and Glyco, an AI-based system for tracking and diagnosing Type 2 diabetes. Both projects won awards.
+I also completed a 3-month development internship at Garaža Makerspace in Mostar, where I built the website for Maker Faire Mostar (an EU-supported festival) and an IoT project, Smart Storage, connecting a web application to an ESP32 microcontroller. I have worked with clients and led teams on several projects, and I pick up new languages and frameworks quickly. Also if you see me fit for some other role I'm open for talk and consideration.
+
+Why Enterwell
+I want to work on high-quality software products in a team that values strong engineering standards and code quality, and I believe I can grow quickly in the .NET ecosystem with your team. And also you are in my town which wouldn't require me to move to another city.
+
+Links
+GitHub: https://github.com/NedimJugo
+LinkedIn: https://www.linkedin.com/in/nedim-jugo-492b99277/
+Portfolio: https://nedim-jugo.vercel.app/
+
+Thank you for your time and consideration. I look forward to hearing from you.
+Best regards,
+Nedim Jugo
+2 Attachments • Scanned by Gmail");
+
+        // ==========================================
+        // 27. IMPEREA (Applied)
+        // ==========================================
+        var compImperea = await GetOrCreateCompany("Imperea", "https://imperea.ba", "Mostar / Sarajevo, BiH", "Software Development & IT Consulting");
+        var contImperea = CreateContact("Imperea Hiring Team", compImperea.Id, "Talent Acquisition / Management", "office@imperea.ba", null, null, ContactType.Recruiter);
+        var appImperea = CreateApplication(
+            compImperea,
+            "Full Stack / .NET Core Developer",
+            ApplicationStatus.Applied,
+            new DateTime(2026, 10, 6, 15, 39, 0, DateTimeKind.Utc),
+            ApplicationSource.Other,
+            "Email prijava (office@imperea.ba)",
+            WorkMode.Hybrid,
+            "Prijava za Full Stack / .NET Core Developer poziciju putem emaila na office@imperea.ba. CV i motivaciono pismo priloženi na bosanskom i engleskom jeziku.",
+            null);
+        LinkApplicationContact(appImperea, contImperea);
+
+        AddInteraction(appImperea, contImperea, InteractionDirection.Outbound, InteractionChannel.Email,
+            new DateTime(2026, 10, 6, 15, 39, 0, DateTimeKind.Utc),
+            "Prijava/Application: Full Stack / .NET Core Developer, Nedim Jugo",
+@"Nedim <nedim.jugoo@gmail.com>
+to: office@imperea.ba
+date: Oct 6, 2026, 3:39 PM
+subject: Prijava/Application: Full Stack / .NET Core Developer, Nedim Jugo
+mailed-by: gmail.com
+
+Nedim <nedim.jugoo@gmail.com>
+3:39 PM (3 minutes ago)
+to office
+
+Poštovani Imperea timu,
+Prijavljujem se na poziciju Full Stack / .NET Core Developera. Motivaciono pismo i CV nalaze se u prilogu ovog mejla, na bosanskom i engleskom jeziku.
+
+O meni
+Diplomirao sam softverski inženjering na Univerzitetu „Džemal Bijedić"" u Mostaru. Tokom studija fokusirao sam se na izradu cjelovitih, stvarnih aplikacija, a tokom protekle godine realizovao sam nekoliko većih projekata.
+Najviše radim s ASP.NET Core platformom, Angularom i Flutterom. Kreirao sam aplikaciju za „pametni grad"" (Smart City) te aplikaciju EcoChallenge, u koju sam integrisao online plaćanje putem platforme Stripe. U svim projektima radio sam s relacijskim bazama podataka, a aplikacije sam postavljao na Microsoft Azure uz Docker kontejnere. Pored toga, izradio sam Binny, sistem za prepoznavanje i sortiranje otpada (YOLOv8, FastAPI), i Glyco, sistem zasnovan na vještačkoj inteligenciji za praćenje i dijagnostiku dijabetesa tipa 2. Oba projekta osvojila su nagrade.
+Obavio sam i tromjesečnu praksu u „Garaža Makerspaceu"" u Mostaru, gdje sam izradio web stranicu za Maker Faire Mostar i IoT projekat Smart Storage. Sarađivao sam s klijentima, vodio timove na više projekata i brzo usvajam nove tehnologije.
+
+Više detalja o mom iskustvu i projektima možete pronaći u priloženom CV-u i motivacionom pismu, kao i na sljedećim linkovima:
+GitHub: https://github.com/NedimJugo
+LinkedIn: https://www.linkedin.com/in/nedim-jugo-492b99277/
+Portfolio: https://nedim-jugo.vercel.app/
+
+Otvoren sam za razgovor o svim mogućnostima saradnje i bilo bi mi drago da se upoznamo.
+Hvala vam na vremenu i razmatranju moje prijave. Radujem se vašem odgovoru.
+Srdačan pozdrav,
+Nedim Jugo
+0603185869
+nedim.jugoo@gmail.com
+__________________________________________________________________________________________________
+Dear Imperea Team,
+I am applying for the Full Stack / .NET Core Developer position. My motivation letter and CV are attached to this email, in both Bosnian and English.
+
+About me
+I hold a bachelor's degree in Software Engineering from ""Džemal Bijedić"" University in Mostar. During my studies I focused on building complete, real-world applications, and over the past year I have delivered several larger projects.
+I work mostly with ASP.NET Core, Angular and Flutter. I built a Smart City application and EcoChallenge, where I integrated online payments with Stripe. I have worked with relational databases in all of my projects, and I have deployed applications on Microsoft Azure using Docker containers. I also built Binny, a waste recognition and sorting system (YOLOv8, FastAPI), and Glyco, an AI-based system for tracking and diagnosing Type 2 diabetes. Both projects won awards.
+I also completed a 3-month internship at Garaža Makerspace in Mostar, where I built the website for Maker Faire Mostar and an IoT project, Smart Storage. I have worked with clients, led teams on several projects, and I pick up new technologies quickly.
+
+You can find more details about my experience and projects in the attached CV and motivation letter, as well as at the following links:
+GitHub: https://github.com/NedimJugo
+LinkedIn: https://www.linkedin.com/in/nedim-jugo-492b99277/
+Portfolio: https://nedim-jugo.vercel.app/
+
+I am open to discussing any opportunities for collaboration and would be happy to meet and talk.
+Thank you for your time and consideration. I look forward to hearing from you.
+Best regards,
+Nedim Jugo
+0603185869
+nedim.jugoo@gmail.com");
+
+        // ==========================================
+        // 28. BS TELECOM SOLUTIONS (Applied)
+        // ==========================================
+        var compBSTelecom = await GetOrCreateCompany("BS Telecom Solutions", "https://bstsolutions.ba", "Branilaca Sarajeva 20, 71000 Sarajevo", "Telecommunications & Software Solutions");
+        var contBSTelecom = CreateContact("BS Telecom HR / Recruitment", compBSTelecom.Id, "Recruitment Team (Asseco SEE)", null, null, null, ContactType.Recruiter, "Asseco South Eastern Europe S.A. / BS TS d.o.o. Sarajevo, Branilaca Sarajeva 20");
+        var appBSTelecom = CreateApplication(
+            compBSTelecom,
+            "Software Engineer (Data & Analytics)",
+            ApplicationStatus.Applied,
+            new DateTime(2026, 10, 6, 15, 40, 0, DateTimeKind.Utc),
+            ApplicationSource.CompanyWebsite,
+            "Web karijerna forma (Asseco SEE / BS Telecom Solutions)",
+            WorkMode.Hybrid,
+            "Prijava putem web forme na stranici za poziciju Software Engineer (Data & Analytics). Priložen Nedim_Jugo_CV_english.pdf i popunjeno motivaciono pismo. Željena bruto plata: 1.750 – 2.000 KM.",
+            null);
+        LinkApplicationContact(appBSTelecom, contBSTelecom);
+
+        AddInteraction(appBSTelecom, contBSTelecom, InteractionDirection.Outbound, InteractionChannel.Other,
+            new DateTime(2026, 10, 6, 15, 40, 0, DateTimeKind.Utc),
+            "Prijava preko web forme – Software Engineer (Data & Analytics)",
+@"BS TELECOM SOLUTIONS (Asseco South Eastern Europe)
+Position: Software Engineer (Data & Analytics) - Full-time
+Location: BS Telecom Sarajevo, Branilaca Sarajeva 20; 71000 Sarajevo
+
+Candidate: Nedim Jugo
+Phone: +387 60 318 5869
+Email: nedim.jugoo@gmail.com
+Location: Mostar, BiH
+Resume: Nedim_Jugo_CV_english.pdf
+Desired salary (gross): 1.750 – 2000 KM
+
+Cover letter:
+Dear BS TS Team,
+
+My name is Nedim Jugo, and I’m from Mostar. I earned my Software Engineering bachelor’s degree from “Džemal Bijedić” University. I am applying for the Software Engineer (Data & Analytics) position because I am interested in working with data and building systems that extract value from it, and BS Telekom offers me the chance to do that with large, real-world datasets.
+
+I learned about BS Telekom while researching companies that invest in digital transformation and data work. My award-winning projects Binny (YOLOv8 + FastAPI) and Glyco (an AI-powered system for tracking and diagnosing Type 2 diabetes) show my experience working with data and models and integrating them into functional systems.
+I worked a 3-month development internship for Garaža Makerspace in Mostar where I designed and built the website for the Maker Faire Mostar (an EU festival). As a web developer, I built and created an Internet of Things (IoT) project called Smart Storage. For this project, I interfaced and built a Web application with an ESP32 microcontroller, and integrated voice activation and recognition. I worked and interacted with many clients and colleagues, and was a team leader for many of the projects.
+
+During the past year, I’ve created many large-scale projects, including a smart waste sorting and recycling system (Binny) with AI (YOLOv8) and FastAPI, and Glyco, a Type 2 diabetes diagnostics system. On the backend I worked with ASP.NET Core, and I also created a Smart City application with Angular, ASP.NET Core and services built with RTGS, and EcoChallenge (Flutter, ASP.NET Core) with an integrated Stripe online payment system.
+
+Through my many projects, I created many secure Web applications and services. I learned how to deploy Web applications on Microsoft Azure. I learned Docker and other containerization techniques. I am able to easily adopt new programming languages and frameworks. I worked with relational databases in all of my projects, including schema design, writing queries, and data processing. During my studies, I had the opportunity to work with Power BI, where I loaded, cleaned, sorted, and filtered data and visualized it through reports. For my AI projects (Binny and Glyco), I independently prepared data for model training, including collecting, cleaning, and processing data, as well as monitoring and analyzing model results.
+
+As a graduate student, I worked with several non-governmental and community organizations. I developed my skills in negotiation and communication through the design and implementation of several projects. My work helped me to become more flexible and understanding of various ways of thinking. I helped develop the skills of several people, including through the training and empowerment of dozens of people. I gained valuable expertise in several vocational skills, which enabled me to develop tangible products, increase my level of self-confidence, and encouraged me to plan for the future. My goal is to apply my software development and data skills to challenges in the telecommunications sector and keep growing with your team.
+
+Thank you for your time and consideration.
+Best regards,
+Nedim Jugo
+
+Links:
+linkedin.com/in/nedim-jugo-492b99277
+github.com/NedimJugo
+nedim-jugo.vercel.app
+
+Consents:
+- Asseco South Eastern Europe S.A. recruitment privacy notice & data processing agreed.
+- Future recruitment process consent agreed.");
+
+        // ==========================================
         // Key Follow-up Tasks for Nedim
         // ==========================================
+        db.Tasks.Add(new TaskItem
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            ApplicationId = appEnterwell.Id,
+            Title = "Follow up na prijavu za .NET Developer (Enterwell)",
+            Notes = "Poslata prijava na careers@enterwell.net. Provjeriti status prijave ako nema odgovora za 7-10 dana.",
+            DueAt = DateTime.UtcNow.AddDays(7),
+            Source = TaskSource.Manual,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        });
+
+        db.Tasks.Add(new TaskItem
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            ApplicationId = appImperea.Id,
+            Title = "Follow up na prijavu za Full Stack / .NET Developer (Imperea)",
+            Notes = "Poslata prijava na office@imperea.ba. Provjeriti status prijave ako nema odgovora za 7-10 dana.",
+            DueAt = DateTime.UtcNow.AddDays(7),
+            Source = TaskSource.Manual,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        });
+
+        db.Tasks.Add(new TaskItem
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            ApplicationId = appBSTelecom.Id,
+            Title = "Pratiti status prijave za Software Engineer (Data & Analytics) u BS Telecom",
+            Notes = "Prijava poslata putem web forme (Asseco SEE / BS Telecom Solutions). Provjeriti status za 7-10 dana.",
+            DueAt = DateTime.UtcNow.AddDays(7),
+            Source = TaskSource.Manual,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        });
+
         db.Tasks.Add(new TaskItem
         {
             Id = Guid.NewGuid(),
